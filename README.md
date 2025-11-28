@@ -127,6 +127,122 @@ pizza-party/
 - **Storage**: JSON file (no database needed)
 - **Fonts**: Fredoka + Nunito (Google Fonts)
 
+## Deploying to PythonAnywhere
+
+PythonAnywhere offers free hosting for Python web apps - perfect for your pizza party!
+
+### 1. Create a PythonAnywhere Account
+
+1. Go to [pythonanywhere.com](https://www.pythonanywhere.com)
+2. Sign up for a free "Beginner" account
+3. Your app will be available at `yourusername.pythonanywhere.com`
+
+### 2. Upload Your Files
+
+**Option A: Upload via Files Tab**
+
+1. Go to the **Files** tab
+2. Navigate to `/home/yourusername/`
+3. Create a new directory called `pizza-party`
+4. Upload all project files (`app.py`, `requirements.txt`, `translations.json`, and the `templates/` folder)
+
+**Option B: Clone from Git (if hosted on GitHub)**
+
+1. Open a **Bash console** from the Consoles tab
+2. Run:
+   ```bash
+   cd ~
+   git clone https://github.com/yourusername/pizza-party.git
+   ```
+
+### 3. Set Up Virtual Environment
+
+In a Bash console:
+
+```bash
+cd ~/pizza-party
+mkvirtualenv --python=/usr/bin/python3.10 pizza-env
+pip install -r requirements.txt
+```
+
+### 4. Create the Web App
+
+1. Go to the **Web** tab
+2. Click **Add a new web app**
+3. Choose **Manual configuration** (not Flask - we'll configure it ourselves)
+4. Select **Python 3.10**
+
+### 5. Configure the Web App
+
+On the Web tab, set these values:
+
+**Source code:** `/home/yourusername/pizza-party`
+
+**Working directory:** `/home/yourusername/pizza-party`
+
+**Virtualenv:** `/home/yourusername/.virtualenvs/pizza-env`
+
+### 6. Edit the WSGI File
+
+Click on the **WSGI configuration file** link (something like `/var/www/yourusername_pythonanywhere_com_wsgi.py`)
+
+Replace ALL the contents with:
+
+```python
+import sys
+import os
+
+# Add your project directory to the path
+project_home = '/home/yourusername/pizza-party'
+if project_home not in sys.path:
+    sys.path.insert(0, project_home)
+
+# Change to the project directory (so JSON files are created in the right place)
+os.chdir(project_home)
+
+# Import your Flask app
+from app import app as application
+```
+
+**Important:** Replace `yourusername` with your actual PythonAnywhere username!
+
+### 7. Reload and Launch
+
+1. Go back to the **Web** tab
+2. Click the green **Reload** button
+3. Visit `https://yourusername.pythonanywhere.com`
+
+### 8. Get Your Links
+
+Since PythonAnywhere doesn't show console output, you need to find your tokens:
+
+1. Go to the **Files** tab
+2. Navigate to `/home/yourusername/pizza-party/`
+3. Click on `tokens.json` to view it
+4. Your links will be:
+   - **Party Link:** `https://yourusername.pythonanywhere.com/party/YOUR_PARTY_TOKEN`
+   - **Admin Link:** `https://yourusername.pythonanywhere.com/admin/YOUR_ADMIN_TOKEN`
+
+### Troubleshooting
+
+**App not loading?**
+- Check the **Error log** link on the Web tab
+- Make sure the WSGI file has the correct paths
+- Ensure the virtualenv path is correct
+
+**Files not found?**
+- Make sure `os.chdir(project_home)` is in your WSGI file
+- Check that all files were uploaded to the correct directory
+
+**Changes not showing?**
+- Always click **Reload** on the Web tab after making changes
+
+### Updating the App
+
+1. Upload new files or `git pull` in a Bash console
+2. Click **Reload** on the Web tab
+3. That's it!
+
 ## Tips for Your Party
 
 1. 🖨️ Print a QR code for the party link
