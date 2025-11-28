@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🍕 Pizza Party!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pizza-red: #E63946;
+            --pizza-orange: #F4A261;
+            --pizza-yellow: #E9C46A;
+            --pizza-cream: #FFF8E7;
+            --pizza-brown: #6D4C41;
+            --pizza-green: #4CAF50;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #FFF8E7 0%, #FFE4B5 50%, #FFDAB9 100%);
+            min-height: 100vh;
+            padding: 12px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 12px;
+            animation: slideDown 0.4s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-family: 'Rubik', sans-serif;
+            font-size: 2rem;
+            color: var(--pizza-red);
+            text-shadow: 2px 2px 0 var(--pizza-orange);
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: var(--pizza-brown);
+            margin-top: 2px;
+        }
+
+        /* Controls bar */
+        .controls-bar {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .lang-btn {
+            padding: 6px 14px;
+            font-size: 0.75rem;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            border: 2px solid var(--pizza-orange);
+            border-radius: 15px;
+            background: white;
+            color: var(--pizza-brown);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .lang-btn.active {
+            background: var(--pizza-orange);
+            color: white;
+        }
+
+        /* Name Entry Screen */
+        #name-screen {
+            background: white;
+            border-radius: 20px;
+            padding: 30px 20px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            animation: popIn 0.4s ease-out;
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        #name-screen h2 {
+            font-family: 'Rubik', sans-serif;
+            color: var(--pizza-brown);
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+
+        #name-screen p {
+            color: #888;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .pizza-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .name-input {
+            width: 100%;
+            max-width: 280px;
+            padding: 14px 20px;
+            font-size: 1rem;
+            border: 3px solid var(--pizza-orange);
+            border-radius: 25px;
+            outline: none;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .name-input:focus {
+            border-color: var(--pizza-red);
+            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.2);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Rubik', sans-serif;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--pizza-red), var(--pizza-orange));
+            color: white;
+            box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+            margin-top: 15px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Order Screen */
+        #order-screen {
+            display: none;
+        }
+
+        .welcome-bar {
+            background: white;
+            border-radius: 15px;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .welcome-text {
+            font-family: 'Rubik', sans-serif;
+            font-size: 1.1rem;
+            color: var(--pizza-brown);
+        }
+
+        .welcome-text span {
+            color: var(--pizza-red);
+        }
+
+        .btn-logout {
+            background: #f0f0f0;
+            color: var(--pizza-brown);
+            padding: 8px 14px;
+            font-size: 0.75rem;
+        }
+
+        .category {
+            background: white;
+            border-radius: 15px;
+            padding: 14px;
+            margin-bottom: 10px;
+            box-shadow: var(--shadow);
+            animation: slideUp 0.4s ease-out backwards;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .category h3 {
+            font-family: 'Rubik', sans-serif;
+            color: var(--pizza-brown);
+            font-size: 1rem;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px dashed var(--pizza-yellow);
+        }
+
+        /* Normal mode grid */
+        .ingredients-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .ingredient {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            background: var(--pizza-cream);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+            user-select: none;
+        }
+
+        .ingredient:active {
+            transform: scale(0.98);
+        }
+
+        .ingredient.selected {
+            background: linear-gradient(135deg, #FFF3E0, #FFE0B2);
+            border-color: var(--pizza-orange);
+        }
+
+        .ingredient input {
+            display: none;
+        }
+
+        .ingredient .emoji {
+            font-size: 1.3rem;
+        }
+
+        .ingredient .name {
+            font-size: 0.85rem;
+            color: var(--pizza-brown);
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .ingredient .checkmark {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .ingredient.selected .checkmark {
+            background: var(--pizza-green);
+            color: white;
+        }
+
+
+        .save-section {
+            text-align: center;
+            margin-top: 12px;
+            padding: 16px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, var(--pizza-green), #66BB6A);
+            color: white;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+            font-size: 1rem;
+            padding: 14px 35px;
+            width: 100%;
+            max-width: 280px;
+        }
+
+        .save-message {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .save-message.show {
+            opacity: 1;
+        }
+
+        .save-message.success {
+            color: var(--pizza-green);
+        }
+
+        .save-message.error {
+            color: var(--pizza-red);
+        }
+
+        /* Pizza Visual Preview */
+        .pizza-visual-container {
+            margin-bottom: 15px;
+        }
+
+        .pizza-visual {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+
+        .pizza-svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+        }
+
+        /* Topping positions - distributed in a circle */
+        .topping {
+            position: absolute;
+            font-size: 1.2rem;
+            transform: translate(-50%, -50%);
+            animation: toppingPop 0.3s ease-out backwards;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        @keyframes toppingPop {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        /* Pizza text preview */
+        .pizza-preview {
+            padding: 10px;
+            background: var(--pizza-cream);
+            border-radius: 12px;
+            text-align: left;
+        }
+
+        .pizza-preview h4 {
+            font-family: 'Rubik', sans-serif;
+            color: var(--pizza-brown);
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .pizza-preview .selected-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .pizza-preview .item-tag {
+            background: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: var(--pizza-brown);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .pizza-preview .empty-message {
+            color: #999;
+            font-style: italic;
+            font-size: 0.85rem;
+        }
+
+        /* Cutting style selector */
+        .cutting-section {
+            background: white;
+            border-radius: 15px;
+            padding: 14px;
+            margin-bottom: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        .cutting-section h3 {
+            font-family: 'Rubik', sans-serif;
+            color: var(--pizza-brown);
+            font-size: 1rem;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px dashed var(--pizza-yellow);
+        }
+
+        .cutting-options {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .cutting-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 10px 12px;
+            background: var(--pizza-cream);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+            user-select: none;
+            min-width: 60px;
+        }
+
+        .cutting-option:hover {
+            background: #fff3d6;
+        }
+
+        .cutting-option.selected {
+            background: linear-gradient(135deg, #FFF3E0, #FFE0B2);
+            border-color: var(--pizza-orange);
+        }
+
+        .cutting-option input {
+            display: none;
+        }
+
+        .cutting-icon {
+            width: 36px;
+            height: 36px;
+        }
+
+        .cutting-label {
+            font-size: 0.7rem;
+            color: var(--pizza-brown);
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* Pizza cut lines */
+        .pizza-cuts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .cut-line {
+            stroke: rgba(139, 69, 19, 0.6);
+            stroke-width: 2;
+            stroke-dasharray: 4, 3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 data-t="app_title">🍕 Pizza Party!</h1>
+            <p class="subtitle" data-t="app_subtitle">Build your dream pizza</p>
+        </header>
+
+        <div class="controls-bar">
+            <button class="lang-btn active" data-lang="en">EN</button>
+            <button class="lang-btn" data-lang="sk">SK</button>
+        </div>
+
+        <!-- Name Entry Screen -->
+        <div id="name-screen">
+            <div class="pizza-icon">🍕</div>
+            <h2 data-t="welcome_title">Welcome!</h2>
+            <p data-t="welcome_subtitle">Enter your name to build your pizza</p>
+            <input type="text" id="name-input" class="name-input" data-t-placeholder="name_placeholder" placeholder="Your name..." maxlength="30" autocomplete="off">
+            <br>
+            <button class="btn btn-primary" onclick="enterParty()" data-t="btn_start">Let's Go! 🚀</button>
+        </div>
+
+        <!-- Order Screen -->
+        <div id="order-screen">
+            <div class="welcome-bar">
+                <div class="welcome-text">
+                    🍕 <span id="user-name-display">Guest</span><span data-t="possessive_pizza">'s Pizza</span>
+                </div>
+                <button class="btn btn-logout" onclick="logout()" data-t="btn_change">Change</button>
+            </div>
+
+            <div id="categories">
+                <!-- Categories will be populated by JavaScript -->
+            </div>
+
+            <!-- Cutting Style -->
+            <div class="cutting-section">
+                <h3 data-t="cat_cutting">🔪 Cutting Style</h3>
+                <div class="cutting-options" id="cutting-options">
+                    <!-- Cutting options will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="save-section">
+                <!-- Pizza Visual -->
+                <div class="pizza-visual-container">
+                    <div class="pizza-visual" id="pizza-visual">
+                        <svg class="pizza-svg" viewBox="0 0 200 200">
+                            <!-- Plate/shadow -->
+                            <ellipse cx="100" cy="105" rx="95" ry="20" fill="rgba(0,0,0,0.1)"/>
+                            <!-- Crust -->
+                            <circle cx="100" cy="100" r="90" fill="#D4A574"/>
+                            <circle cx="100" cy="100" r="88" fill="#C4956A"/>
+                            <!-- Crust texture -->
+                            <circle cx="100" cy="100" r="85" fill="#E8C49A" stroke="#D4A574" stroke-width="2"/>
+                            <!-- Inner pizza (sauce/base area) - visible ring -->
+                            <circle id="pizza-base" cx="100" cy="100" r="75" fill="#D32F2F"/>
+                            <!-- Cheese layer - plain color, smaller to show base ring -->
+                            <circle id="pizza-cheese" cx="100" cy="100" r="55" fill="#FFF8DC" opacity="0"/>
+                            <!-- Cut lines -->
+                            <g id="cut-lines"></g>
+                        </svg>
+                        <!-- Toppings will be added here dynamically -->
+                        <div id="toppings-container"></div>
+                    </div>
+                </div>
+
+                <div class="pizza-preview">
+                    <h4 data-t="your_pizza">🍕 Your Pizza:</h4>
+                    <div id="selected-preview" class="selected-items">
+                        <span class="empty-message" data-t="select_ingredients">Select some ingredients!</span>
+                    </div>
+                </div>
+                <button class="btn btn-save" onclick="saveOrder()" data-t="btn_save">Save My Pizza! 💾</button>
+                <div id="save-message" class="save-message"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const TOKEN = "{{ token }}";
+        const INGREDIENTS = {{ ingredients | tojson }};
+        const CATEGORIES = {{ categories | tojson }};
+        const TRANSLATIONS = {{ translations | tojson }};
+        
+        let currentUser = null;
+        let selectedIngredients = {};
+        let selectedCutting = 8;
+        let currentLang = 'en';
+        
+        const CUTTING_OPTIONS = [1, 2, 4, 6, 8];
+
+        // Base colors for different sauce types
+        const BASE_COLORS = {
+            tomato: '#D32F2F',
+            white: '#F5F5DC',
+            bbq: '#5D4037',
+            pesto: '#558B2F',
+            default: '#D32F2F'
+        };
+
+        // Cheese colors - white or orange based on type
+        const CHEESE_COLORS = {
+            mozzarella: '#FFF8DC',   // white/cream
+            parmesan: '#FFB347',     // orange
+            gorgonzola: '#FFF8DC',   // white/cream
+            goat: '#FFF8DC',         // white/cream
+            hermelin: '#FFF8DC',     // white/cream
+            camembert: '#FFF8DC',    // white/cream
+            emmental: '#FFB347',     // orange
+            cheddar: '#FFB347',      // orange
+            default: '#FFD54F'       // golden yellow
+        };
+
+        // Generate circular positions for toppings - evenly distributed
+        function getToppingPositions(count) {
+            const positions = [];
+            const cx = 50, cy = 50;
+            
+            if (count === 0) return positions;
+            
+            if (count === 1) {
+                // Single topping in center
+                positions.push({ x: cx, y: cy });
+                return positions;
+            }
+            
+            // All toppings in a single circle, evenly spaced
+            const radius = 18; // Distance from center (% of pizza)
+            const angleStep = (2 * Math.PI) / count;
+            const startAngle = -Math.PI / 2; // Start from top
+            
+            for (let i = 0; i < count; i++) {
+                const angle = startAngle + i * angleStep;
+                positions.push({
+                    x: cx + radius * Math.cos(angle),
+                    y: cy + radius * Math.sin(angle)
+                });
+            }
+            
+            return positions;
+        }
+
+        function t(key) {
+            return TRANSLATIONS[currentLang]?.[key] || TRANSLATIONS['en']?.[key] || key;
+        }
+
+        function init() {
+            const savedLang = localStorage.getItem('pizzaLang') || 'en';
+            setLang(savedLang);
+            
+            renderCategories();
+            renderCuttingOptions();
+            setupLangToggle();
+            updatePizzaVisual();
+            
+            document.getElementById('name-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') enterParty();
+            });
+        }
+
+        function renderCuttingOptions() {
+            const container = document.getElementById('cutting-options');
+            container.innerHTML = CUTTING_OPTIONS.map(num => `
+                <label class="cutting-option ${selectedCutting === num ? 'selected' : ''}" data-cuts="${num}">
+                    <input type="radio" name="cutting" value="${num}" ${selectedCutting === num ? 'checked' : ''}>
+                    <svg class="cutting-icon" viewBox="0 0 40 40">
+                        ${getCuttingSVG(num)}
+                    </svg>
+                    <span class="cutting-label">${t('cut_' + num)}</span>
+                </label>
+            `).join('');
+
+            container.querySelectorAll('.cutting-option').forEach(el => {
+                el.addEventListener('click', () => {
+                    selectedCutting = parseInt(el.dataset.cuts);
+                    container.querySelectorAll('.cutting-option').forEach(opt => {
+                        opt.classList.toggle('selected', parseInt(opt.dataset.cuts) === selectedCutting);
+                    });
+                    updatePizzaVisual();
+                });
+            });
+        }
+
+        function getCuttingSVG(cuts) {
+            const cx = 20, cy = 20, r = 16;
+            let svg = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#FFD54F" stroke="#D4A574" stroke-width="2"/>`;
+            
+            if (cuts === 1) {
+                // No cuts - whole pizza
+                return svg;
+            }
+            
+            // Draw cut lines
+            const lineCount = cuts === 2 ? 1 : cuts === 4 ? 2 : cuts === 6 ? 3 : 4;
+            const angleStep = 180 / lineCount;
+            
+            for (let i = 0; i < lineCount; i++) {
+                const angle = (i * angleStep) * Math.PI / 180;
+                const x1 = cx + r * Math.cos(angle);
+                const y1 = cy + r * Math.sin(angle);
+                const x2 = cx - r * Math.cos(angle);
+                const y2 = cy - r * Math.sin(angle);
+                svg += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#8B4513" stroke-width="1.5" stroke-dasharray="2,1"/>`;
+            }
+            
+            return svg;
+        }
+
+        function setupLangToggle() {
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.addEventListener('click', () => setLang(btn.dataset.lang));
+            });
+        }
+
+        function setLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('pizzaLang', lang);
+            
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+            
+            document.querySelectorAll('[data-t]').forEach(el => {
+                el.textContent = t(el.dataset.t);
+            });
+            
+            document.querySelectorAll('[data-t-placeholder]').forEach(el => {
+                el.placeholder = t(el.dataset.tPlaceholder);
+            });
+            
+            renderCategories();
+            renderCuttingOptions();
+            updatePreview();
+        }
+
+        function getIngredientName(item) {
+            // Get name based on current language, fallback to name_en or legacy name
+            if (currentLang === 'sk' && item.name_sk) return item.name_sk;
+            return item.name_en || item.name || item.id;
+        }
+
+        function renderCategories() {
+            const container = document.getElementById('categories');
+            container.innerHTML = '';
+
+            for (const category of CATEGORIES) {
+                const items = INGREDIENTS[category] || [];
+                if (items.length === 0) continue;
+                
+                const div = document.createElement('div');
+                div.className = 'category';
+                div.innerHTML = `
+                    <h3>${t('cat_' + category)}</h3>
+                    <div class="ingredients-grid">
+                        ${items.map(item => `
+                            <label class="ingredient ${selectedIngredients[category]?.includes(item.id) ? 'selected' : ''}" 
+                                   data-category="${category}" data-id="${item.id}">
+                                <input type="checkbox" name="${category}" value="${item.id}" 
+                                       ${selectedIngredients[category]?.includes(item.id) ? 'checked' : ''}>
+                                <span class="emoji">${item.emoji}</span>
+                                <span class="name">${getIngredientName(item)}</span>
+                                <span class="checkmark">✓</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(div);
+            }
+
+            document.querySelectorAll('.ingredient').forEach(el => {
+                el.addEventListener('click', () => toggleIngredient(el));
+            });
+        }
+
+        function toggleIngredient(el) {
+            const category = el.dataset.category;
+            const id = el.dataset.id;
+            const checkbox = el.querySelector('input');
+
+            checkbox.checked = !checkbox.checked;
+            el.classList.toggle('selected', checkbox.checked);
+
+            if (!selectedIngredients[category]) {
+                selectedIngredients[category] = [];
+            }
+
+            if (checkbox.checked) {
+                if (!selectedIngredients[category].includes(id)) {
+                    selectedIngredients[category].push(id);
+                }
+            } else {
+                selectedIngredients[category] = selectedIngredients[category].filter(i => i !== id);
+            }
+
+            updatePreview();
+            updatePizzaVisual();
+        }
+
+        function updatePizzaVisual() {
+            // Update base color
+            const baseEl = document.getElementById('pizza-base');
+            const selectedBases = selectedIngredients.bases || [];
+            const baseColor = selectedBases.length > 0 
+                ? (BASE_COLORS[selectedBases[0]] || BASE_COLORS.default)
+                : BASE_COLORS.default;
+            baseEl.setAttribute('fill', baseColor);
+
+            // Update cheese - color based on selected cheese type
+            const cheeseEl = document.getElementById('pizza-cheese');
+            const selectedCheeses = selectedIngredients.cheeses || [];
+            const hasCheese = selectedCheeses.length > 0;
+            
+            if (hasCheese) {
+                // Get color from first selected cheese
+                const cheeseColor = CHEESE_COLORS[selectedCheeses[0]] || CHEESE_COLORS.default;
+                cheeseEl.setAttribute('fill', cheeseColor);
+                cheeseEl.setAttribute('opacity', '1');
+            } else {
+                cheeseEl.setAttribute('opacity', '0');
+            }
+
+            // Update cut lines
+            const cutLinesEl = document.getElementById('cut-lines');
+            cutLinesEl.innerHTML = '';
+            
+            if (selectedCutting > 1) {
+                const cx = 100, cy = 100, r = 88;
+                const lineCount = selectedCutting === 2 ? 1 : selectedCutting === 4 ? 2 : selectedCutting === 6 ? 3 : 4;
+                const angleStep = 180 / lineCount;
+                
+                for (let i = 0; i < lineCount; i++) {
+                    const angle = (i * angleStep) * Math.PI / 180;
+                    const x1 = cx + r * Math.cos(angle);
+                    const y1 = cy + r * Math.sin(angle);
+                    const x2 = cx - r * Math.cos(angle);
+                    const y2 = cy - r * Math.sin(angle);
+                    
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', x1);
+                    line.setAttribute('y1', y1);
+                    line.setAttribute('x2', x2);
+                    line.setAttribute('y2', y2);
+                    line.setAttribute('class', 'cut-line');
+                    cutLinesEl.appendChild(line);
+                }
+            }
+
+            // Update toppings
+            const toppingsContainer = document.getElementById('toppings-container');
+            toppingsContainer.innerHTML = '';
+
+            // Collect all topping emojis (meats, veggies, extras)
+            const toppingCategories = ['meats', 'veggies', 'extras'];
+            let allToppings = [];
+            
+            for (const cat of toppingCategories) {
+                const ids = selectedIngredients[cat] || [];
+                for (const id of ids) {
+                    const item = INGREDIENTS[cat]?.find(i => i.id === id);
+                    if (item) {
+                        allToppings.push(item.emoji);
+                    }
+                }
+            }
+
+            // Get circular positions based on topping count
+            const positions = getToppingPositions(allToppings.length);
+            
+            // Place toppings on pizza in circular pattern
+            allToppings.forEach((emoji, index) => {
+                if (index >= positions.length) return;
+                
+                const pos = positions[index];
+                const topping = document.createElement('span');
+                topping.className = 'topping';
+                topping.textContent = emoji;
+                topping.style.left = `${pos.x}%`;
+                topping.style.top = `${pos.y}%`;
+                topping.style.animationDelay = `${index * 0.05}s`;
+                toppingsContainer.appendChild(topping);
+            });
+        }
+
+        function updatePreview() {
+            const preview = document.getElementById('selected-preview');
+            const allSelected = [];
+
+            for (const category of CATEGORIES) {
+                const ids = selectedIngredients[category] || [];
+                for (const id of ids) {
+                    const item = INGREDIENTS[category]?.find(i => i.id === id);
+                    if (item) {
+                        allSelected.push(`${item.emoji} ${getIngredientName(item)}`);
+                    }
+                }
+            }
+
+            if (allSelected.length === 0) {
+                preview.innerHTML = `<span class="empty-message">${t('select_ingredients')}</span>`;
+            } else {
+                preview.innerHTML = allSelected.map(item => 
+                    `<span class="item-tag">${item}</span>`
+                ).join('');
+            }
+        }
+
+        async function enterParty() {
+            const nameInput = document.getElementById('name-input');
+            const name = nameInput.value.trim();
+
+            if (!name) {
+                nameInput.focus();
+                nameInput.style.borderColor = '#E63946';
+                setTimeout(() => nameInput.style.borderColor = '#F4A261', 1000);
+                return;
+            }
+
+            currentUser = name;
+            document.getElementById('user-name-display').textContent = name;
+
+            try {
+                const response = await fetch(`/api/order/${TOKEN}?name=${encodeURIComponent(name)}`);
+                const data = await response.json();
+
+                if (data.order) {
+                    if (data.order.ingredients) {
+                        selectedIngredients = data.order.ingredients;
+                    }
+                    if (data.order.cutting) {
+                        selectedCutting = data.order.cutting;
+                    }
+                    renderCategories();
+                    renderCuttingOptions();
+                    updatePreview();
+                    updatePizzaVisual();
+                }
+            } catch (err) {
+                console.error('Failed to load order:', err);
+            }
+
+            document.getElementById('name-screen').style.display = 'none';
+            document.getElementById('order-screen').style.display = 'block';
+            updatePizzaVisual();
+        }
+
+        function logout() {
+            currentUser = null;
+            selectedIngredients = {};
+            selectedCutting = 8;
+            
+            renderCategories();
+            renderCuttingOptions();
+            updatePreview();
+            updatePizzaVisual();
+
+            document.getElementById('name-screen').style.display = 'block';
+            document.getElementById('order-screen').style.display = 'none';
+            document.getElementById('name-input').value = '';
+        }
+
+        async function saveOrder() {
+            if (!currentUser) return;
+
+            const messageEl = document.getElementById('save-message');
+            
+            try {
+                const response = await fetch(`/api/order/${TOKEN}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: currentUser,
+                        ingredients: selectedIngredients,
+                        cutting: selectedCutting
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    messageEl.textContent = t('save_success');
+                    messageEl.className = 'save-message show success';
+                } else {
+                    throw new Error(data.error || 'Failed to save');
+                }
+            } catch (err) {
+                messageEl.textContent = t('save_error');
+                messageEl.className = 'save-message show error';
+            }
+
+            setTimeout(() => {
+                messageEl.className = 'save-message';
+            }, 2500);
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

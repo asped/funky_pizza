@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👑 Pizza Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pizza-red: #E63946;
+            --pizza-orange: #F4A261;
+            --pizza-yellow: #E9C46A;
+            --pizza-cream: #FFF8E7;
+            --pizza-brown: #6D4C41;
+            --pizza-green: #4CAF50;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-family: 'Rubik', sans-serif;
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, var(--pizza-orange), var(--pizza-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        /* Language toggle */
+        .lang-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .lang-btn {
+            padding: 6px 14px;
+            font-size: 0.8rem;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .lang-btn.active {
+            background: var(--pizza-orange);
+            border-color: var(--pizza-orange);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            padding: 10px 25px;
+            font-family: 'Rubik', sans-serif;
+            font-size: 0.95rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .tab-btn.active {
+            background: var(--pizza-orange);
+            border-color: var(--pizza-orange);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Stats */
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 12px 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-number {
+            font-family: 'Rubik', sans-serif;
+            font-size: 1.8rem;
+            color: var(--pizza-orange);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Orders Grid */
+        .orders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .order-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .order-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .order-card.done {
+            opacity: 0.6;
+            order: 999;
+        }
+
+        .order-card.done .order-header {
+            background: rgba(76, 175, 80, 0.2);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .order-header:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .order-name {
+            font-family: 'Rubik', sans-serif;
+            font-size: 1.1rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .order-name::before {
+            content: "🍕";
+        }
+
+        .done-badge {
+            font-size: 0.7rem;
+            background: var(--pizza-green);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+
+        .order-toggle {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .order-card.expanded .order-toggle {
+            transform: rotate(180deg);
+        }
+
+        .order-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .order-card.expanded .order-body {
+            max-height: 500px;
+        }
+
+        .order-content {
+            padding: 15px;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 0.8rem;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-done {
+            background: var(--pizza-green);
+            color: white;
+        }
+
+        .btn-done:hover {
+            background: #43A047;
+        }
+
+        .btn-undone {
+            background: var(--pizza-orange);
+            color: white;
+        }
+
+        .btn-undone:hover {
+            background: #E59347;
+        }
+
+        .btn-delete-order {
+            background: rgba(230, 57, 70, 0.2);
+            color: var(--pizza-red);
+        }
+
+        .btn-delete-order:hover {
+            background: var(--pizza-red);
+            color: white;
+        }
+
+        .order-section {
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 5px;
+        }
+
+        .ingredients-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .ingredient-tag {
+            background: rgba(244, 162, 97, 0.2);
+            color: var(--pizza-orange);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .no-ingredients {
+            color: rgba(255, 255, 255, 0.4);
+            font-style: italic;
+            font-size: 0.8rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            grid-column: 1 / -1;
+        }
+
+        .empty-state .icon {
+            font-size: 50px;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+
+        .empty-state h2 {
+            font-family: 'Rubik', sans-serif;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .empty-state p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        /* Category colors */
+        .cat-bases { background: rgba(230, 57, 70, 0.2); color: #ff6b6b; }
+        .cat-cheeses { background: rgba(233, 196, 106, 0.2); color: #ffd93d; }
+        .cat-meats { background: rgba(111, 78, 55, 0.3); color: #d4a373; }
+        .cat-veggies { background: rgba(76, 175, 80, 0.2); color: #6BCB77; }
+        .cat-extras { background: rgba(124, 58, 237, 0.2); color: #a78bfa; }
+        .cat-cutting { background: rgba(255, 255, 255, 0.15); color: #fff; }
+
+        /* ============ INGREDIENTS MANAGEMENT ============ */
+        .ingredients-manager {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .category-section {
+            margin-bottom: 20px;
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .category-title {
+            font-family: 'Rubik', sans-serif;
+            font-size: 1.1rem;
+            color: var(--pizza-orange);
+        }
+
+        .btn-add {
+            padding: 6px 14px;
+            font-size: 0.8rem;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            background: var(--pizza-green);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-add:hover {
+            background: #43A047;
+        }
+
+        .ingredients-table {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .ingredient-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .ingredient-row:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .ingredient-row.disabled {
+            opacity: 0.5;
+        }
+
+        .ingredient-emoji {
+            font-size: 1.3rem;
+            width: 35px;
+            text-align: center;
+        }
+
+        .ingredient-name {
+            flex: 1;
+            font-weight: 600;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .ingredient-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 40px;
+            height: 22px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 11px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .toggle-switch.enabled {
+            background: var(--pizza-green);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+            transition: all 0.2s ease;
+        }
+
+        .toggle-switch.enabled::after {
+            left: 21px;
+        }
+
+        .btn-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-edit {
+            background: rgba(244, 162, 97, 0.2);
+            color: var(--pizza-orange);
+        }
+
+        .btn-edit:hover {
+            background: var(--pizza-orange);
+            color: white;
+        }
+
+        .btn-remove {
+            background: rgba(230, 57, 70, 0.2);
+            color: var(--pizza-red);
+        }
+
+        .btn-remove:hover {
+            background: var(--pizza-red);
+            color: white;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: #1a1a2e;
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 380px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: modalPop 0.3s ease-out;
+        }
+
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal h3 {
+            font-family: 'Rubik', sans-serif;
+            color: var(--pizza-orange);
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--pizza-orange);
+        }
+
+        .form-group select option {
+            background: #1a1a2e;
+            color: white;
+        }
+
+        /* Emoji picker */
+        .emoji-picker {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            max-height: 160px;
+            overflow-y: auto;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .emoji-option {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+
+        .emoji-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .emoji-option.selected {
+            background: var(--pizza-orange);
+            border-color: var(--pizza-yellow);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+            padding: 10px 15px;
+            font-family: 'Rubik', sans-serif;
+            font-size: 0.95rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-cancel {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-confirm {
+            background: var(--pizza-green);
+            color: white;
+        }
+
+        .btn-confirm:hover {
+            background: #43A047;
+        }
+
+        /* Refresh button */
+        .refresh-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--pizza-orange), var(--pizza-red));
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(244, 162, 97, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            transform: scale(1.1) rotate(180deg);
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.6rem; }
+            .tabs { flex-wrap: wrap; }
+            .tab-btn { padding: 8px 18px; font-size: 0.85rem; }
+            .orders-grid { grid-template-columns: 1fr; }
+            .ingredient-row { flex-wrap: wrap; }
+            .ingredient-actions { width: 100%; justify-content: flex-end; margin-top: 6px; }
+            .emoji-picker { grid-template-columns: repeat(6, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 data-t="admin_title">👑 Pizza Command Center</h1>
+        </header>
+
+        <div class="lang-toggle">
+            <button class="lang-btn active" data-lang="en">EN</button>
+            <button class="lang-btn" data-lang="sk">SK</button>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="orders" data-t="tab_orders">📋 Orders</button>
+            <button class="tab-btn" data-tab="ingredients" data-t="tab_ingredients">🧑‍🍳 Ingredients</button>
+        </div>
+
+        <!-- Orders Tab -->
+        <div id="tab-orders" class="tab-content active">
+            <div class="stats-bar">
+                <div class="stat">
+                    <div class="stat-number" id="total-orders">0</div>
+                    <div class="stat-label" data-t="stat_orders">Orders</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="total-ingredients">0</div>
+                    <div class="stat-label" data-t="stat_ingredients">Ingredients</div>
+                </div>
+            </div>
+
+            <div id="orders-container" class="orders-grid">
+                <!-- Orders will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Ingredients Tab -->
+        <div id="tab-ingredients" class="tab-content">
+            <div class="ingredients-manager" id="ingredients-manager">
+                <!-- Categories will be rendered here -->
+            </div>
+        </div>
+    </div>
+
+    <button class="refresh-btn" onclick="refreshAll()" title="Refresh">🔄</button>
+
+    <!-- Add/Edit Modal -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <h3 id="modal-title" data-t="modal_add_title">Add Ingredient</h3>
+            <form id="ingredient-form">
+                <input type="hidden" id="edit-category">
+                <input type="hidden" id="edit-id">
+                
+                <div class="form-group" id="category-select-group">
+                    <label data-t="label_category">Category</label>
+                    <select id="ingredient-category">
+                        <!-- Categories will be populated -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label data-t="label_name_en">Name (English)</label>
+                    <input type="text" id="ingredient-name-en" data-t-placeholder="name_placeholder_en" placeholder="e.g. Pepperoni" maxlength="30" required>
+                </div>
+
+                <div class="form-group">
+                    <label data-t="label_name_sk">Name (Slovak)</label>
+                    <input type="text" id="ingredient-name-sk" data-t-placeholder="name_placeholder_sk" placeholder="e.g. Pepperoni" maxlength="30">
+                </div>
+
+                <div class="form-group">
+                    <label data-t="label_emoji">Emoji</label>
+                    <div class="emoji-picker" id="emoji-picker">
+                        <!-- Emojis will be populated -->
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal()" data-t="btn_cancel">Cancel</button>
+                    <button type="submit" class="btn-confirm" data-t="btn_save_modal">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const TOKEN = window.location.pathname.split('/').pop();
+        const CATEGORIES = {{ categories | tojson }};
+        const AVAILABLE_EMOJIS = {{ available_emojis | tojson }};
+        const TRANSLATIONS = {{ translations | tojson }};
+        
+        let INGREDIENTS = {{ ingredients | tojson }};
+        let ORDERS = {{ orders | tojson }};
+        let currentLang = 'en';
+
+        const CUTTING_LABELS = {
+            1: '⭕ Whole',
+            2: '➗ 2 pcs',
+            4: '✚ 4 pcs',
+            6: '✱ 6 pcs',
+            8: '✳️ 8 pcs'
+        };
+
+        function t(key) {
+            return TRANSLATIONS[currentLang]?.[key] || TRANSLATIONS['en']?.[key] || key;
+        }
+
+        // Escape HTML to prevent XSS attacks
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // Escape for JavaScript string literals
+        function escapeJs(str) {
+            if (!str) return '';
+            return str.replace(/\\/g, '\\\\')
+                      .replace(/'/g, "\\'")
+                      .replace(/"/g, '\\"')
+                      .replace(/\n/g, '\\n')
+                      .replace(/\r/g, '\\r');
+        }
+
+        function getIngredientName(item) {
+            // Get name based on current language, fallback to name_en or legacy name
+            if (currentLang === 'sk' && item.name_sk) return item.name_sk;
+            return item.name_en || item.name || item.id;
+        }
+
+        let selectedEmoji = "🍕";
+        let isEditMode = false;
+
+        function init() {
+            const savedLang = localStorage.getItem('pizzaLang') || 'en';
+            setLang(savedLang);
+            
+            setupTabs();
+            setupLangToggle();
+            renderOrders(ORDERS);
+            renderIngredients();
+            setupEmojiPicker();
+            setupForm();
+            populateCategorySelect();
+        }
+
+        function setupLangToggle() {
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.addEventListener('click', () => setLang(btn.dataset.lang));
+            });
+        }
+
+        function setLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('pizzaLang', lang);
+            
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+            
+            // Update all translatable elements
+            document.querySelectorAll('[data-t]').forEach(el => {
+                el.textContent = t(el.dataset.t);
+            });
+            
+            document.querySelectorAll('[data-t-placeholder]').forEach(el => {
+                el.placeholder = t(el.dataset.tPlaceholder);
+            });
+            
+            // Re-render with new language
+            renderOrders(ORDERS);
+            renderIngredients();
+            populateCategorySelect();
+        }
+
+        function setupTabs() {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
+                });
+            });
+        }
+
+        // ============ ORDERS ============
+
+        function getIngredientInfo(category, id) {
+            const items = INGREDIENTS[category] || [];
+            const item = items.find(i => i.id === id);
+            if (item) {
+                return { ...item, name: getIngredientName(item) };
+            }
+            return { name: id, emoji: "❓" };
+        }
+
+        function countTotalIngredients(orders) {
+            let count = 0;
+            for (const order of Object.values(orders)) {
+                for (const ids of Object.values(order.ingredients || {})) {
+                    count += ids.length;
+                }
+            }
+            return count;
+        }
+
+        function toggleOrderExpand(card) {
+            card.classList.toggle('expanded');
+        }
+
+        function renderOrders(orders) {
+            const container = document.getElementById('orders-container');
+            const ordersList = Object.entries(orders);
+
+            // Sort: not done first, then done
+            ordersList.sort((a, b) => {
+                const aDone = a[1].done ? 1 : 0;
+                const bDone = b[1].done ? 1 : 0;
+                return aDone - bDone;
+            });
+
+            document.getElementById('total-orders').textContent = ordersList.length;
+            document.getElementById('total-ingredients').textContent = countTotalIngredients(orders);
+
+            if (ordersList.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">🍕</div>
+                        <h2 data-t="no_orders_title">${t('no_orders_title')}</h2>
+                        <p data-t="no_orders_subtitle">${t('no_orders_subtitle')}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = ordersList.map(([key, order]) => {
+                const ingredients = order.ingredients || {};
+                const hasIngredients = Object.values(ingredients).some(arr => arr.length > 0);
+                const isDone = order.done || false;
+                const cutting = order.cutting || 8;
+
+                let sectionsHTML = '';
+                for (const category of CATEGORIES) {
+                    const ids = ingredients[category] || [];
+                    if (ids.length === 0) continue;
+                    
+                    sectionsHTML += `
+                        <div class="order-section">
+                            <div class="section-title">${t('cat_' + category)}</div>
+                            <div class="ingredients-list">
+                                ${ids.map(id => {
+                                    const info = getIngredientInfo(category, id);
+                                    return `<span class="ingredient-tag cat-${category}">${info.emoji} ${info.name}</span>`;
+                                }).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Add cutting info
+                sectionsHTML += `
+                    <div class="order-section">
+                        <div class="section-title">${t('cat_cutting')}</div>
+                        <div class="ingredients-list">
+                            <span class="ingredient-tag cat-cutting">${CUTTING_LABELS[cutting] || CUTTING_LABELS[8]}</span>
+                        </div>
+                    </div>
+                `;
+
+                if (!hasIngredients) {
+                    sectionsHTML = `<p class="no-ingredients">${t('no_ingredients_selected')}</p>` + sectionsHTML;
+                }
+
+                const safeKey = escapeJs(key);
+                const safeDisplayName = escapeHtml(order.display_name || key);
+
+                return `
+                    <div class="order-card ${isDone ? 'done' : ''}" data-key="${escapeHtml(key)}">
+                        <div class="order-header" onclick="toggleOrderExpand(this.parentElement)">
+                            <div class="order-name">
+                                ${safeDisplayName}
+                                ${isDone ? `<span class="done-badge">${t('order_done_badge')}</span>` : ''}
+                            </div>
+                            <span class="order-toggle">▼</span>
+                        </div>
+                        <div class="order-body">
+                            <div class="order-content">
+                                <div class="order-actions">
+                                    ${isDone 
+                                        ? `<button class="btn-action btn-undone" onclick="toggleDone('${safeKey}', false)">${t('btn_undone')}</button>`
+                                        : `<button class="btn-action btn-done" onclick="toggleDone('${safeKey}', true)">${t('btn_done')}</button>`
+                                    }
+                                    <button class="btn-action btn-delete-order" onclick="deleteOrder('${safeKey}')">🗑️</button>
+                                </div>
+                                ${sectionsHTML}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function loadOrders() {
+            try {
+                const response = await fetch(`/api/orders/${TOKEN}`);
+                const data = await response.json();
+                if (data.orders) {
+                    ORDERS = data.orders;
+                    renderOrders(ORDERS);
+                }
+            } catch (err) {
+                console.error('Failed to load orders:', err);
+            }
+        }
+
+        async function toggleDone(name, done) {
+            try {
+                const response = await fetch(`/api/order/${TOKEN}/${encodeURIComponent(name)}/done`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ done })
+                });
+                
+                if (response.ok) {
+                    ORDERS[name.toLowerCase()].done = done;
+                    renderOrders(ORDERS);
+                }
+            } catch (err) {
+                console.error('Failed to toggle done:', err);
+            }
+        }
+
+        async function deleteOrder(name) {
+            const displayName = ORDERS[name.toLowerCase()]?.display_name || name;
+            if (!confirm(t('confirm_delete_order').replace('{name}', displayName))) return;
+
+            try {
+                const response = await fetch(`/api/order/${TOKEN}/${encodeURIComponent(name)}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    delete ORDERS[name.toLowerCase()];
+                    renderOrders(ORDERS);
+                }
+            } catch (err) {
+                console.error('Failed to delete order:', err);
+            }
+        }
+
+        // ============ INGREDIENTS MANAGEMENT ============
+
+        function renderIngredients() {
+            const container = document.getElementById('ingredients-manager');
+            
+            container.innerHTML = CATEGORIES.map(category => {
+                const items = INGREDIENTS[category] || [];
+                
+                return `
+                    <div class="category-section">
+                        <div class="category-header">
+                            <div class="category-title">${t('cat_' + category)}</div>
+                            <button class="btn-add" onclick="openAddModal('${category}')">${t('btn_add')}</button>
+                        </div>
+                        <div class="ingredients-table">
+                            ${items.length === 0 ? `<p class="no-ingredients">${t('no_ingredients_category')}</p>` : ''}
+                            ${items.map(item => `
+                                <div class="ingredient-row ${item.enabled ? '' : 'disabled'}">
+                                    <div class="ingredient-emoji">${item.emoji}</div>
+                                    <div class="ingredient-name">${getIngredientName(item)}</div>
+                                    <div class="ingredient-actions">
+                                        <div class="toggle-switch ${item.enabled ? 'enabled' : ''}" 
+                                             onclick="toggleIngredient('${category}', '${item.id}', ${!item.enabled})"
+                                             title="${item.enabled ? 'Disable' : 'Enable'}"></div>
+                                        <button class="btn-icon btn-edit" onclick="openEditModal('${category}', '${item.id}')" title="Edit">✏️</button>
+                                        <button class="btn-icon btn-remove" onclick="removeIngredient('${category}', '${item.id}')" title="Remove">🗑️</button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function toggleIngredient(category, id, enabled) {
+            try {
+                const response = await fetch(`/api/ingredients/${TOKEN}/${category}/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ enabled })
+                });
+                
+                if (response.ok) {
+                    const item = INGREDIENTS[category].find(i => i.id === id);
+                    if (item) item.enabled = enabled;
+                    renderIngredients();
+                }
+            } catch (err) {
+                console.error('Failed to toggle ingredient:', err);
+            }
+        }
+
+        async function removeIngredient(category, id) {
+            const item = INGREDIENTS[category].find(i => i.id === id);
+            const msg = t('confirm_delete_ingredient')
+                .replace('{name}', item ? getIngredientName(item) : id)
+                .replace('{category}', t('cat_' + category));
+            if (!confirm(msg)) return;
+
+            try {
+                const response = await fetch(`/api/ingredients/${TOKEN}/${category}/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    INGREDIENTS[category] = INGREDIENTS[category].filter(i => i.id !== id);
+                    renderIngredients();
+                }
+            } catch (err) {
+                console.error('Failed to remove ingredient:', err);
+            }
+        }
+
+        // ============ MODAL ============
+
+        function setupEmojiPicker() {
+            const picker = document.getElementById('emoji-picker');
+            picker.innerHTML = AVAILABLE_EMOJIS.map(emoji => `
+                <div class="emoji-option ${emoji === selectedEmoji ? 'selected' : ''}" 
+                     data-emoji="${emoji}">${emoji}</div>
+            `).join('');
+
+            picker.addEventListener('click', (e) => {
+                if (e.target.classList.contains('emoji-option')) {
+                    picker.querySelectorAll('.emoji-option').forEach(el => el.classList.remove('selected'));
+                    e.target.classList.add('selected');
+                    selectedEmoji = e.target.dataset.emoji;
+                }
+            });
+        }
+
+        function populateCategorySelect() {
+            const select = document.getElementById('ingredient-category');
+            select.innerHTML = CATEGORIES.map(cat => 
+                `<option value="${cat}">${t('cat_' + cat)}</option>`
+            ).join('');
+        }
+
+        function openAddModal(category = null) {
+            isEditMode = false;
+            document.getElementById('modal-title').textContent = t('modal_add_title');
+            document.getElementById('modal-title').dataset.t = 'modal_add_title';
+            document.getElementById('ingredient-name-en').value = '';
+            document.getElementById('ingredient-name-sk').value = '';
+            document.getElementById('edit-category').value = '';
+            document.getElementById('edit-id').value = '';
+            document.getElementById('category-select-group').style.display = 'block';
+            
+            if (category) {
+                document.getElementById('ingredient-category').value = category;
+            }
+
+            selectEmoji('🍕');
+            document.getElementById('modal-overlay').classList.add('show');
+        }
+
+        function openEditModal(category, id) {
+            isEditMode = true;
+            const item = INGREDIENTS[category].find(i => i.id === id);
+            if (!item) return;
+
+            document.getElementById('modal-title').textContent = t('modal_edit_title');
+            document.getElementById('modal-title').dataset.t = 'modal_edit_title';
+            document.getElementById('ingredient-name-en').value = item.name_en || item.name || '';
+            document.getElementById('ingredient-name-sk').value = item.name_sk || '';
+            document.getElementById('edit-category').value = category;
+            document.getElementById('edit-id').value = id;
+            document.getElementById('category-select-group').style.display = 'none';
+
+            selectEmoji(item.emoji);
+            document.getElementById('modal-overlay').classList.add('show');
+        }
+
+        function selectEmoji(emoji) {
+            selectedEmoji = emoji;
+            document.querySelectorAll('.emoji-option').forEach(el => {
+                el.classList.toggle('selected', el.dataset.emoji === emoji);
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.remove('show');
+        }
+
+        function setupForm() {
+            document.getElementById('ingredient-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const name_en = document.getElementById('ingredient-name-en').value.trim();
+                const name_sk = document.getElementById('ingredient-name-sk').value.trim();
+                if (!name_en) return;
+
+                if (isEditMode) {
+                    const category = document.getElementById('edit-category').value;
+                    const id = document.getElementById('edit-id').value;
+                    
+                    try {
+                        const response = await fetch(`/api/ingredients/${TOKEN}/${category}/${id}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ name_en, name_sk: name_sk || name_en, emoji: selectedEmoji })
+                        });
+                        
+                        if (response.ok) {
+                            const item = INGREDIENTS[category].find(i => i.id === id);
+                            if (item) {
+                                item.name_en = name_en;
+                                item.name_sk = name_sk || name_en;
+                                item.emoji = selectedEmoji;
+                            }
+                            renderIngredients();
+                            closeModal();
+                        }
+                    } catch (err) {
+                        console.error('Failed to update ingredient:', err);
+                    }
+                } else {
+                    const category = document.getElementById('ingredient-category').value;
+                    
+                    try {
+                        const response = await fetch(`/api/ingredients/${TOKEN}/${category}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ name_en, name_sk: name_sk || name_en, emoji: selectedEmoji })
+                        });
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (!INGREDIENTS[category]) INGREDIENTS[category] = [];
+                            INGREDIENTS[category].push(data.ingredient);
+                            renderIngredients();
+                            closeModal();
+                        } else {
+                            const err = await response.json();
+                            alert(err.error || 'Failed to add ingredient');
+                        }
+                    } catch (err) {
+                        console.error('Failed to add ingredient:', err);
+                    }
+                }
+            });
+        }
+
+        function refreshAll() {
+            loadOrders();
+            loadIngredients();
+        }
+
+        async function loadIngredients() {
+            try {
+                const response = await fetch(`/api/ingredients/${TOKEN}`);
+                const data = await response.json();
+                if (data.ingredients) {
+                    INGREDIENTS = data.ingredients;
+                    renderIngredients();
+                }
+            } catch (err) {
+                console.error('Failed to load ingredients:', err);
+            }
+        }
+
+        // Click outside modal to close
+        document.getElementById('modal-overlay').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('modal-overlay')) {
+                closeModal();
+            }
+        });
+
+        // Auto-refresh orders every 30 seconds
+        setInterval(loadOrders, 30000);
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

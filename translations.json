@@ -1,0 +1,127 @@
+{
+  "en": {
+    "app_title": "🍕 Pizza Party!",
+    "cat_cutting": "🔪 Cutting Style",
+    "cut_1": "Whole (no cuts!)",
+    "cut_2": "2 Halves",
+    "cut_4": "4 Slices",
+    "cut_6": "6 Slices",
+    "cut_8": "8 Slices",
+    "app_subtitle": "Build your dream pizza",
+    "welcome_title": "Welcome!",
+    "welcome_subtitle": "Enter your name to build your pizza",
+    "name_placeholder": "Your name...",
+    "btn_start": "Let's Go! 🚀",
+    "btn_change": "Change",
+    "btn_save": "Save My Pizza! 💾",
+    "save_success": "✅ Saved! 👨‍🍳",
+    "save_error": "❌ Error. Try again.",
+    "your_pizza": "🍕 Your Pizza:",
+    "select_ingredients": "Select some ingredients!",
+    "possessive_pizza": "'s Pizza",
+    
+    "mode_normal": "Normal",
+    "mode_compact": "Compact",
+    
+    "cat_bases": "🍅 Base",
+    "cat_cheeses": "🧀 Cheese",
+    "cat_meats": "🥓 Meats",
+    "cat_veggies": "🥬 Veggies",
+    "cat_extras": "✨ Extras",
+    
+    "admin_title": "👑 Pizza Command Center",
+    "tab_orders": "📋 Orders",
+    "tab_ingredients": "🧑‍🍳 Ingredients",
+    "stat_orders": "Orders",
+    "stat_ingredients": "Ingredients",
+    
+    "no_orders_title": "No orders yet!",
+    "no_orders_subtitle": "Share the party link and wait for orders...",
+    "no_ingredients_selected": "No ingredients selected 🤔",
+    "no_ingredients_category": "No ingredients in this category",
+    
+    "btn_add": "+ Add",
+    "btn_done": "Done",
+    "btn_undone": "Reopen",
+    "order_done_badge": "✅ DONE",
+    
+    "modal_add_title": "Add Ingredient",
+    "modal_edit_title": "Edit Ingredient",
+    "label_category": "Category",
+    "label_name_en": "Name (English)",
+    "label_name_sk": "Name (Slovak)",
+    "label_emoji": "Emoji",
+    "name_placeholder_en": "e.g. Pepperoni",
+    "name_placeholder_sk": "e.g. Pepperoni",
+    "btn_cancel": "Cancel",
+    "btn_save_modal": "Save",
+    
+    "confirm_delete_order": "Delete {name}'s pizza order?",
+    "confirm_delete_ingredient": "Remove \"{name}\" from {category}?",
+    
+    "language": "Language"
+  },
+  
+  "sk": {
+    "app_title": "🍕 Pizza Párty!",
+    "cat_cutting": "🔪 Ako krájať?",
+    "cut_1": "Celá pre mňa!",
+    "cut_2": "Na polovicu",
+    "cut_4": "4 kúsky",
+    "cut_6": "6 kúskov",
+    "cut_8": "Pre hladošov",
+    "app_subtitle": "Vytvor si svoju vysnívanú pizzu",
+    "welcome_title": "Čau!",
+    "welcome_subtitle": "Zadaj meno a zlož si svoju pizzu",
+    "name_placeholder": "Tvoje meno...",
+    "btn_start": "Poďme na to! 🚀",
+    "btn_change": "Zmeniť",
+    "btn_save": "Daj ju do pece! 💾",
+    "save_success": "✅ Hotovo! Majster pizze informovaný 👨‍🍳",
+    "save_error": "❌ Ajaj, niečo sa pokazilo. Skús znova.",
+    "your_pizza": "🍕 Tvoja pizza:",
+    "select_ingredients": "Vyber si ingrediencie, nečakaj!",
+    "possessive_pizza": " - pizza",
+    
+    "mode_normal": "Normál",
+    "mode_compact": "Kompakt",
+    
+    "cat_bases": "🍅 Základ",
+    "cat_cheeses": "🧀 Syry",
+    "cat_meats": "🥓 Mäsko",
+    "cat_veggies": "🥬 Zeleninka",
+    "cat_extras": "✨ Vychytávky",
+    
+    "admin_title": "👑 Veliteľské centrum pizze",
+    "tab_orders": "📋 Objednávky",
+    "tab_ingredients": "🧑‍🍳 Ingrediencie",
+    "stat_orders": "Objednávky",
+    "stat_ingredients": "Ingrediencie",
+    
+    "no_orders_title": "Zatiaľ nič!",
+    "no_orders_subtitle": "Pošli link kamarátom a čakaj na objednávky...",
+    "no_ingredients_selected": "Ešte nič nevybrané 🤔",
+    "no_ingredients_category": "V tejto kategórii nie sú ingrediencie",
+    
+    "btn_add": "+ Pridať",
+    "btn_done": "Hotovo",
+    "btn_undone": "Naspäť",
+    "order_done_badge": "✅ UPEČENÉ",
+    
+    "modal_add_title": "Pridať ingredienciu",
+    "modal_edit_title": "Upraviť ingredienciu",
+    "label_category": "Kategória",
+    "label_name_en": "Názov (Anglicky)",
+    "label_name_sk": "Názov (Slovensky)",
+    "label_emoji": "Emotikon",
+    "name_placeholder_en": "napr. Bacon",
+    "name_placeholder_sk": "napr. Slaninka",
+    "btn_cancel": "Zrušiť",
+    "btn_save_modal": "Uložiť",
+    
+    "confirm_delete_order": "Vymazať pizzu od {name}?",
+    "confirm_delete_ingredient": "Odstrániť \"{name}\" z {category}?",
+    
+    "language": "Jazyk"
+  }
+}
