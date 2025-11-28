@@ -1,0 +1,14 @@
+# Local data files
+tokens.json
+orders.json
+ingredients.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# IDE
+.vscode/
+.idea/

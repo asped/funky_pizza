@@ -15,8 +15,6 @@
             --pizza-cream: #FFF8E7;
             --pizza-brown: #6D4C41;
             --pizza-green: #4CAF50;
-            --admin-purple: #7C3AED;
-            --admin-purple-light: #A78BFA;
             --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
@@ -41,18 +39,12 @@
 
         header {
             text-align: center;
-            margin-bottom: 40px;
-            animation: slideDown 0.6s ease-out;
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
+            margin-bottom: 30px;
         }
 
         h1 {
             font-family: 'Fredoka', sans-serif;
-            font-size: 3rem;
+            font-size: 2.5rem;
             background: linear-gradient(135deg, var(--pizza-orange), var(--pizza-yellow));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -60,197 +52,503 @@
             margin-bottom: 10px;
         }
 
-        .subtitle {
-            font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.7);
+        /* Tabs */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
         }
 
+        .tab-btn {
+            padding: 12px 30px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .tab-btn.active {
+            background: var(--pizza-orange);
+            border-color: var(--pizza-orange);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Stats */
         .stats-bar {
             display: flex;
             justify-content: center;
-            gap: 30px;
-            margin-bottom: 40px;
+            gap: 20px;
+            margin-bottom: 25px;
             flex-wrap: wrap;
         }
 
         .stat {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 20px 35px;
+            border-radius: 15px;
+            padding: 15px 25px;
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            animation: popIn 0.5s ease-out backwards;
-        }
-
-        .stat:nth-child(1) { animation-delay: 0.1s; }
-        .stat:nth-child(2) { animation-delay: 0.2s; }
-
-        @keyframes popIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
         }
 
         .stat-number {
             font-family: 'Fredoka', sans-serif;
-            font-size: 3rem;
+            font-size: 2rem;
             color: var(--pizza-orange);
         }
 
         .stat-label {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: rgba(255, 255, 255, 0.7);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
+        /* Orders Grid */
         .orders-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
         }
 
         .order-card {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
-            border-radius: 25px;
-            padding: 25px;
+            border-radius: 20px;
+            padding: 20px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
-            animation: slideUp 0.5s ease-out backwards;
         }
 
         .order-card:hover {
-            transform: translateY(-5px);
             background: rgba(255, 255, 255, 0.08);
             border-color: var(--pizza-orange);
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .order-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .order-name {
             font-family: 'Fredoka', sans-serif;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             color: white;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         .order-name::before {
-            content: "🍕";
+            content: "🍕 ";
         }
 
         .btn-delete {
             background: rgba(230, 57, 70, 0.2);
             color: var(--pizza-red);
             border: none;
-            width: 35px;
-            height: 35px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.9rem;
             transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .btn-delete:hover {
             background: var(--pizza-red);
             color: white;
-            transform: scale(1.1);
         }
 
         .order-section {
-            margin-bottom: 15px;
-        }
-
-        .order-section:last-child {
-            margin-bottom: 0;
+            margin-bottom: 12px;
         }
 
         .section-title {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             color: rgba(255, 255, 255, 0.5);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .ingredients-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
         }
 
         .ingredient-tag {
             background: rgba(244, 162, 97, 0.2);
             color: var(--pizza-orange);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.9rem;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
             font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 5px;
         }
 
         .no-ingredients {
             color: rgba(255, 255, 255, 0.4);
             font-style: italic;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .empty-state {
             text-align: center;
-            padding: 80px 40px;
+            padding: 60px 30px;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 30px;
+            border-radius: 20px;
             border: 2px dashed rgba(255, 255, 255, 0.2);
+            grid-column: 1 / -1;
         }
 
         .empty-state .icon {
-            font-size: 80px;
-            margin-bottom: 20px;
+            font-size: 60px;
+            margin-bottom: 15px;
             opacity: 0.5;
         }
 
         .empty-state h2 {
             font-family: 'Fredoka', sans-serif;
             color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .empty-state p {
             color: rgba(255, 255, 255, 0.5);
         }
 
+        /* Category colors */
+        .cat-bases { background: rgba(230, 57, 70, 0.2); color: #ff6b6b; }
+        .cat-cheeses { background: rgba(233, 196, 106, 0.2); color: #ffd93d; }
+        .cat-meats { background: rgba(111, 78, 55, 0.3); color: #d4a373; }
+        .cat-veggies { background: rgba(76, 175, 80, 0.2); color: #6BCB77; }
+        .cat-extras { background: rgba(124, 58, 237, 0.2); color: #a78bfa; }
+
+        /* ============ INGREDIENTS MANAGEMENT ============ */
+        .ingredients-manager {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .category-section {
+            margin-bottom: 25px;
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .category-title {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.3rem;
+            color: var(--pizza-orange);
+        }
+
+        .btn-add {
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 600;
+            background: var(--pizza-green);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-add:hover {
+            background: #43A047;
+            transform: translateY(-1px);
+        }
+
+        .ingredients-table {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .ingredient-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .ingredient-row:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .ingredient-row.disabled {
+            opacity: 0.5;
+        }
+
+        .ingredient-emoji {
+            font-size: 1.5rem;
+            width: 40px;
+            text-align: center;
+        }
+
+        .ingredient-name {
+            flex: 1;
+            font-weight: 600;
+            color: white;
+        }
+
+        .ingredient-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .toggle-switch.enabled {
+            background: var(--pizza-green);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+            transition: all 0.2s ease;
+        }
+
+        .toggle-switch.enabled::after {
+            left: 23px;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-edit {
+            background: rgba(244, 162, 97, 0.2);
+            color: var(--pizza-orange);
+        }
+
+        .btn-edit:hover {
+            background: var(--pizza-orange);
+            color: white;
+        }
+
+        .btn-remove {
+            background: rgba(230, 57, 70, 0.2);
+            color: var(--pizza-red);
+        }
+
+        .btn-remove:hover {
+            background: var(--pizza-red);
+            color: white;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: #1a1a2e;
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 400px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: modalPop 0.3s ease-out;
+        }
+
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal h3 {
+            font-family: 'Fredoka', sans-serif;
+            color: var(--pizza-orange);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 6px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 1rem;
+            font-family: 'Nunito', sans-serif;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: white;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--pizza-orange);
+        }
+
+        .form-group select option {
+            background: #1a1a2e;
+            color: white;
+        }
+
+        /* Emoji picker */
+        .emoji-picker {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 6px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .emoji-option {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+
+        .emoji-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .emoji-option.selected {
+            background: var(--pizza-orange);
+            border-color: var(--pizza-yellow);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+            padding: 12px 20px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-cancel {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-confirm {
+            background: var(--pizza-green);
+            color: white;
+        }
+
+        .btn-confirm:hover {
+            background: #43A047;
+        }
+
+        /* Refresh button */
         .refresh-btn {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
+            bottom: 25px;
+            right: 25px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--pizza-orange), var(--pizza-red));
             border: none;
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(244, 162, 97, 0.5);
+            box-shadow: 0 4px 15px rgba(244, 162, 97, 0.5);
             transition: all 0.3s ease;
         }
 
@@ -258,33 +556,14 @@
             transform: scale(1.1) rotate(180deg);
         }
 
-        /* Category colors */
-        .cat-sauces { background: rgba(230, 57, 70, 0.2); color: #ff6b6b; }
-        .cat-cheeses { background: rgba(233, 196, 106, 0.2); color: #ffd93d; }
-        .cat-meats { background: rgba(111, 78, 55, 0.3); color: #d4a373; }
-        .cat-veggies { background: rgba(76, 175, 80, 0.2); color: #6BCB77; }
-        .cat-extras { background: rgba(124, 58, 237, 0.2); color: #a78bfa; }
-
         @media (max-width: 600px) {
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .orders-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .stats-bar {
-                gap: 15px;
-            }
-            
-            .stat {
-                padding: 15px 25px;
-            }
-            
-            .stat-number {
-                font-size: 2rem;
-            }
+            h1 { font-size: 1.8rem; }
+            .tabs { flex-wrap: wrap; }
+            .tab-btn { padding: 10px 20px; font-size: 0.9rem; }
+            .orders-grid { grid-template-columns: 1fr; }
+            .ingredient-row { flex-wrap: wrap; }
+            .ingredient-actions { width: 100%; justify-content: flex-end; margin-top: 8px; }
+            .emoji-picker { grid-template-columns: repeat(6, 1fr); }
         }
     </style>
 </head>
@@ -292,39 +571,115 @@
     <div class="container">
         <header>
             <h1>👑 Pizza Command Center</h1>
-            <p class="subtitle">All pizza orders at a glance</p>
         </header>
 
-        <div class="stats-bar">
-            <div class="stat">
-                <div class="stat-number" id="total-orders">0</div>
-                <div class="stat-label">Total Orders</div>
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="orders">📋 Orders</button>
+            <button class="tab-btn" data-tab="ingredients">🧑‍🍳 Ingredients</button>
+        </div>
+
+        <!-- Orders Tab -->
+        <div id="tab-orders" class="tab-content active">
+            <div class="stats-bar">
+                <div class="stat">
+                    <div class="stat-number" id="total-orders">0</div>
+                    <div class="stat-label">Orders</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="total-ingredients">0</div>
+                    <div class="stat-label">Ingredients</div>
+                </div>
             </div>
-            <div class="stat">
-                <div class="stat-number" id="total-ingredients">0</div>
-                <div class="stat-label">Ingredients Used</div>
+
+            <div id="orders-container" class="orders-grid">
+                <!-- Orders will be loaded here -->
             </div>
         </div>
 
-        <div id="orders-container" class="orders-grid">
-            <!-- Orders will be loaded here -->
+        <!-- Ingredients Tab -->
+        <div id="tab-ingredients" class="tab-content">
+            <div class="ingredients-manager" id="ingredients-manager">
+                <!-- Categories will be rendered here -->
+            </div>
         </div>
     </div>
 
-    <button class="refresh-btn" onclick="loadOrders()" title="Refresh orders">🔄</button>
+    <button class="refresh-btn" onclick="refreshAll()" title="Refresh">🔄</button>
+
+    <!-- Add/Edit Modal -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <h3 id="modal-title">Add Ingredient</h3>
+            <form id="ingredient-form">
+                <input type="hidden" id="edit-category">
+                <input type="hidden" id="edit-id">
+                
+                <div class="form-group" id="category-select-group">
+                    <label>Category</label>
+                    <select id="ingredient-category">
+                        <!-- Categories will be populated -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="ingredient-name" placeholder="e.g. Pepperoni" maxlength="30" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Emoji</label>
+                    <div class="emoji-picker" id="emoji-picker">
+                        <!-- Emojis will be populated -->
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn-confirm">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script>
-        const INGREDIENTS = {{ ingredients | tojson }};
-        const INITIAL_ORDERS = {{ orders | tojson }};
         const TOKEN = window.location.pathname.split('/').pop();
+        const CATEGORIES = {{ categories | tojson }};
+        const AVAILABLE_EMOJIS = {{ available_emojis | tojson }};
+        let INGREDIENTS = {{ ingredients | tojson }};
+        let ORDERS = {{ orders | tojson }};
 
         const CATEGORY_NAMES = {
-            sauces: "Sauce",
-            cheeses: "Cheese",
-            meats: "Meats",
-            veggies: "Veggies",
-            extras: "Extras"
+            bases: "🍅 Base",
+            cheeses: "🧀 Cheese",
+            meats: "🥓 Meats",
+            veggies: "🥬 Veggies",
+            extras: "✨ Extras"
         };
+
+        let selectedEmoji = "🍕";
+        let isEditMode = false;
+
+        function init() {
+            setupTabs();
+            renderOrders(ORDERS);
+            renderIngredients();
+            setupEmojiPicker();
+            setupForm();
+            populateCategorySelect();
+        }
+
+        function setupTabs() {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
+                });
+            });
+        }
+
+        // ============ ORDERS ============
 
         function getIngredientInfo(category, id) {
             const items = INGREDIENTS[category] || [];
@@ -350,16 +705,16 @@
 
             if (ordersList.length === 0) {
                 container.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1 / -1;">
+                    <div class="empty-state">
                         <div class="icon">🍕</div>
                         <h2>No orders yet!</h2>
-                        <p>Share the party link and wait for the orders to roll in...</p>
+                        <p>Share the party link and wait for orders...</p>
                     </div>
                 `;
                 return;
             }
 
-            container.innerHTML = ordersList.map(([key, order], index) => {
+            container.innerHTML = ordersList.map(([key, order]) => {
                 const ingredients = order.ingredients || {};
                 const hasIngredients = Object.values(ingredients).some(arr => arr.length > 0);
 
@@ -381,14 +736,14 @@
                 }
 
                 if (!hasIngredients) {
-                    sectionsHTML = '<p class="no-ingredients">No ingredients selected yet 🤔</p>';
+                    sectionsHTML = '<p class="no-ingredients">No ingredients selected 🤔</p>';
                 }
 
                 return `
-                    <div class="order-card" style="animation-delay: ${index * 0.1}s">
+                    <div class="order-card">
                         <div class="order-header">
                             <div class="order-name">${order.display_name || key}</div>
-                            <button class="btn-delete" onclick="deleteOrder('${key}')" title="Delete order">🗑️</button>
+                            <button class="btn-delete" onclick="deleteOrder('${key}')" title="Delete">🗑️</button>
                         </div>
                         ${sectionsHTML}
                     </div>
@@ -401,7 +756,8 @@
                 const response = await fetch(`/api/orders/${TOKEN}`);
                 const data = await response.json();
                 if (data.orders) {
-                    renderOrders(data.orders);
+                    ORDERS = data.orders;
+                    renderOrders(ORDERS);
                 }
             } catch (err) {
                 console.error('Failed to load orders:', err);
@@ -424,11 +780,230 @@
             }
         }
 
-        // Initial render
-        renderOrders(INITIAL_ORDERS);
+        // ============ INGREDIENTS MANAGEMENT ============
 
-        // Auto-refresh every 30 seconds
+        function renderIngredients() {
+            const container = document.getElementById('ingredients-manager');
+            
+            container.innerHTML = CATEGORIES.map(category => {
+                const items = INGREDIENTS[category] || [];
+                
+                return `
+                    <div class="category-section">
+                        <div class="category-header">
+                            <div class="category-title">${CATEGORY_NAMES[category] || category}</div>
+                            <button class="btn-add" onclick="openAddModal('${category}')">+ Add</button>
+                        </div>
+                        <div class="ingredients-table">
+                            ${items.length === 0 ? '<p class="no-ingredients">No ingredients in this category</p>' : ''}
+                            ${items.map(item => `
+                                <div class="ingredient-row ${item.enabled ? '' : 'disabled'}">
+                                    <div class="ingredient-emoji">${item.emoji}</div>
+                                    <div class="ingredient-name">${item.name}</div>
+                                    <div class="ingredient-actions">
+                                        <div class="toggle-switch ${item.enabled ? 'enabled' : ''}" 
+                                             onclick="toggleIngredient('${category}', '${item.id}', ${!item.enabled})"
+                                             title="${item.enabled ? 'Disable' : 'Enable'}"></div>
+                                        <button class="btn-icon btn-edit" onclick="openEditModal('${category}', '${item.id}')" title="Edit">✏️</button>
+                                        <button class="btn-icon btn-remove" onclick="removeIngredient('${category}', '${item.id}')" title="Remove">🗑️</button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function toggleIngredient(category, id, enabled) {
+            try {
+                const response = await fetch(`/api/ingredients/${TOKEN}/${category}/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ enabled })
+                });
+                
+                if (response.ok) {
+                    const item = INGREDIENTS[category].find(i => i.id === id);
+                    if (item) item.enabled = enabled;
+                    renderIngredients();
+                }
+            } catch (err) {
+                console.error('Failed to toggle ingredient:', err);
+            }
+        }
+
+        async function removeIngredient(category, id) {
+            const item = INGREDIENTS[category].find(i => i.id === id);
+            if (!confirm(`Remove "${item?.name || id}" from ${category}?`)) return;
+
+            try {
+                const response = await fetch(`/api/ingredients/${TOKEN}/${category}/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    INGREDIENTS[category] = INGREDIENTS[category].filter(i => i.id !== id);
+                    renderIngredients();
+                }
+            } catch (err) {
+                console.error('Failed to remove ingredient:', err);
+            }
+        }
+
+        // ============ MODAL ============
+
+        function setupEmojiPicker() {
+            const picker = document.getElementById('emoji-picker');
+            picker.innerHTML = AVAILABLE_EMOJIS.map(emoji => `
+                <div class="emoji-option ${emoji === selectedEmoji ? 'selected' : ''}" 
+                     data-emoji="${emoji}">${emoji}</div>
+            `).join('');
+
+            picker.addEventListener('click', (e) => {
+                if (e.target.classList.contains('emoji-option')) {
+                    picker.querySelectorAll('.emoji-option').forEach(el => el.classList.remove('selected'));
+                    e.target.classList.add('selected');
+                    selectedEmoji = e.target.dataset.emoji;
+                }
+            });
+        }
+
+        function populateCategorySelect() {
+            const select = document.getElementById('ingredient-category');
+            select.innerHTML = CATEGORIES.map(cat => 
+                `<option value="${cat}">${CATEGORY_NAMES[cat] || cat}</option>`
+            ).join('');
+        }
+
+        function openAddModal(category = null) {
+            isEditMode = false;
+            document.getElementById('modal-title').textContent = 'Add Ingredient';
+            document.getElementById('ingredient-name').value = '';
+            document.getElementById('edit-category').value = '';
+            document.getElementById('edit-id').value = '';
+            document.getElementById('category-select-group').style.display = 'block';
+            
+            if (category) {
+                document.getElementById('ingredient-category').value = category;
+            }
+
+            selectEmoji('🍕');
+            document.getElementById('modal-overlay').classList.add('show');
+        }
+
+        function openEditModal(category, id) {
+            isEditMode = true;
+            const item = INGREDIENTS[category].find(i => i.id === id);
+            if (!item) return;
+
+            document.getElementById('modal-title').textContent = 'Edit Ingredient';
+            document.getElementById('ingredient-name').value = item.name;
+            document.getElementById('edit-category').value = category;
+            document.getElementById('edit-id').value = id;
+            document.getElementById('category-select-group').style.display = 'none';
+
+            selectEmoji(item.emoji);
+            document.getElementById('modal-overlay').classList.add('show');
+        }
+
+        function selectEmoji(emoji) {
+            selectedEmoji = emoji;
+            document.querySelectorAll('.emoji-option').forEach(el => {
+                el.classList.toggle('selected', el.dataset.emoji === emoji);
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.remove('show');
+        }
+
+        function setupForm() {
+            document.getElementById('ingredient-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const name = document.getElementById('ingredient-name').value.trim();
+                if (!name) return;
+
+                if (isEditMode) {
+                    const category = document.getElementById('edit-category').value;
+                    const id = document.getElementById('edit-id').value;
+                    
+                    try {
+                        const response = await fetch(`/api/ingredients/${TOKEN}/${category}/${id}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ name, emoji: selectedEmoji })
+                        });
+                        
+                        if (response.ok) {
+                            const item = INGREDIENTS[category].find(i => i.id === id);
+                            if (item) {
+                                item.name = name;
+                                item.emoji = selectedEmoji;
+                            }
+                            renderIngredients();
+                            closeModal();
+                        }
+                    } catch (err) {
+                        console.error('Failed to update ingredient:', err);
+                    }
+                } else {
+                    const category = document.getElementById('ingredient-category').value;
+                    
+                    try {
+                        const response = await fetch(`/api/ingredients/${TOKEN}/${category}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ name, emoji: selectedEmoji })
+                        });
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (!INGREDIENTS[category]) INGREDIENTS[category] = [];
+                            INGREDIENTS[category].push(data.ingredient);
+                            renderIngredients();
+                            closeModal();
+                        } else {
+                            const err = await response.json();
+                            alert(err.error || 'Failed to add ingredient');
+                        }
+                    } catch (err) {
+                        console.error('Failed to add ingredient:', err);
+                    }
+                }
+            });
+        }
+
+        function refreshAll() {
+            loadOrders();
+            loadIngredients();
+        }
+
+        async function loadIngredients() {
+            try {
+                const response = await fetch(`/api/ingredients/${TOKEN}`);
+                const data = await response.json();
+                if (data.ingredients) {
+                    INGREDIENTS = data.ingredients;
+                    renderIngredients();
+                }
+            } catch (err) {
+                console.error('Failed to load ingredients:', err);
+            }
+        }
+
+        // Click outside modal to close
+        document.getElementById('modal-overlay').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('modal-overlay')) {
+                closeModal();
+            }
+        });
+
+        // Auto-refresh orders every 30 seconds
         setInterval(loadOrders, 30000);
+
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
