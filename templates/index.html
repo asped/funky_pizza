@@ -75,13 +75,6 @@
             align-items: center;
         }
 
-        .control-label {
-            font-size: 0.7rem;
-            color: var(--pizza-brown);
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
         .mode-btn, .lang-btn {
             padding: 5px 12px;
             font-size: 0.7rem;
@@ -407,10 +400,50 @@
             color: var(--pizza-red);
         }
 
-        /* Pizza preview */
+        /* Pizza Visual Preview */
+        .pizza-visual-container {
+            margin-bottom: 15px;
+        }
+
+        .pizza-visual {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        body.compact .pizza-visual {
+            width: 140px;
+            height: 140px;
+        }
+
+        .pizza-svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+        }
+
+        /* Topping positions - distributed in a circle */
+        .topping {
+            position: absolute;
+            font-size: 1.2rem;
+            transform: translate(-50%, -50%);
+            animation: toppingPop 0.3s ease-out backwards;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        body.compact .topping {
+            font-size: 0.9rem;
+        }
+
+        @keyframes toppingPop {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        /* Pizza text preview */
         .pizza-preview {
-            margin-bottom: 12px;
-            padding: 12px;
+            padding: 10px;
             background: var(--pizza-cream);
             border-radius: 12px;
             text-align: left;
@@ -445,16 +478,17 @@
         }
 
         body.compact .pizza-preview {
-            padding: 10px;
+            padding: 8px;
         }
 
         body.compact .pizza-preview h4 {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
+            margin-bottom: 6px;
         }
 
         body.compact .pizza-preview .item-tag {
             padding: 3px 8px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
         }
 
         body.compact .save-section {
@@ -465,6 +499,10 @@
         body.compact .btn-save {
             padding: 12px 30px;
             font-size: 0.9rem;
+        }
+
+        body.compact .pizza-visual-container {
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -510,6 +548,37 @@
             </div>
 
             <div class="save-section">
+                <!-- Pizza Visual -->
+                <div class="pizza-visual-container">
+                    <div class="pizza-visual" id="pizza-visual">
+                        <svg class="pizza-svg" viewBox="0 0 200 200">
+                            <!-- Plate/shadow -->
+                            <ellipse cx="100" cy="105" rx="95" ry="20" fill="rgba(0,0,0,0.1)"/>
+                            <!-- Crust -->
+                            <circle cx="100" cy="100" r="90" fill="#D4A574"/>
+                            <circle cx="100" cy="100" r="88" fill="#C4956A"/>
+                            <!-- Crust texture -->
+                            <circle cx="100" cy="100" r="85" fill="#E8C49A" stroke="#D4A574" stroke-width="2"/>
+                            <!-- Inner pizza (sauce area) -->
+                            <circle id="pizza-base" cx="100" cy="100" r="75" fill="#D32F2F"/>
+                            <!-- Cheese layer -->
+                            <circle id="pizza-cheese" cx="100" cy="100" r="73" fill="#FFD54F" opacity="0"/>
+                            <!-- Cheese blobs for texture -->
+                            <g id="cheese-texture" opacity="0">
+                                <ellipse cx="70" cy="80" rx="20" ry="15" fill="#FFECB3"/>
+                                <ellipse cx="130" cy="75" rx="18" ry="12" fill="#FFECB3"/>
+                                <ellipse cx="100" cy="120" rx="22" ry="14" fill="#FFECB3"/>
+                                <ellipse cx="60" cy="115" rx="15" ry="10" fill="#FFECB3"/>
+                                <ellipse cx="140" cy="110" rx="16" ry="11" fill="#FFECB3"/>
+                                <ellipse cx="85" cy="70" rx="12" ry="8" fill="#FFF8E1"/>
+                                <ellipse cx="115" cy="130" rx="14" ry="9" fill="#FFF8E1"/>
+                            </g>
+                        </svg>
+                        <!-- Toppings will be added here dynamically -->
+                        <div id="toppings-container"></div>
+                    </div>
+                </div>
+
                 <div class="pizza-preview">
                     <h4 data-t="your_pizza">🍕 Your Pizza:</h4>
                     <div id="selected-preview" class="selected-items">
@@ -532,12 +601,30 @@
         let selectedIngredients = {};
         let currentLang = 'en';
 
+        // Base colors for different sauce types
+        const BASE_COLORS = {
+            tomato: '#D32F2F',
+            white: '#F5F5DC',
+            bbq: '#5D4037',
+            pesto: '#558B2F',
+            default: '#D32F2F'
+        };
+
+        // Topping positions in a nice distributed pattern
+        const TOPPING_POSITIONS = [
+            { x: 50, y: 35 }, { x: 65, y: 30 }, { x: 35, y: 45 },
+            { x: 75, y: 45 }, { x: 25, y: 55 }, { x: 55, y: 50 },
+            { x: 45, y: 65 }, { x: 70, y: 60 }, { x: 30, y: 70 },
+            { x: 60, y: 75 }, { x: 50, y: 55 }, { x: 40, y: 40 },
+            { x: 65, y: 70 }, { x: 35, y: 60 }, { x: 55, y: 45 },
+            { x: 75, y: 55 }, { x: 25, y: 45 }, { x: 45, y: 30 },
+        ];
+
         function t(key) {
             return TRANSLATIONS[currentLang]?.[key] || TRANSLATIONS['en']?.[key] || key;
         }
 
         function init() {
-            // Load saved preferences
             const savedMode = localStorage.getItem('pizzaMode') || 'compact';
             const savedLang = localStorage.getItem('pizzaLang') || 'en';
             
@@ -547,6 +634,7 @@
             renderCategories();
             setupModeToggle();
             setupLangToggle();
+            updatePizzaVisual();
             
             document.getElementById('name-input').addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') enterParty();
@@ -586,7 +674,6 @@
                 btn.classList.toggle('active', btn.dataset.lang === lang);
             });
             
-            // Update all translatable elements
             document.querySelectorAll('[data-t]').forEach(el => {
                 el.textContent = t(el.dataset.t);
             });
@@ -595,7 +682,6 @@
                 el.placeholder = t(el.dataset.tPlaceholder);
             });
             
-            // Re-render categories with new language
             renderCategories();
             updatePreview();
         }
@@ -628,7 +714,6 @@
                 container.appendChild(div);
             }
 
-            // Add click handlers
             document.querySelectorAll('.ingredient').forEach(el => {
                 el.addEventListener('click', () => toggleIngredient(el));
             });
@@ -655,6 +740,59 @@
             }
 
             updatePreview();
+            updatePizzaVisual();
+        }
+
+        function updatePizzaVisual() {
+            // Update base color
+            const baseEl = document.getElementById('pizza-base');
+            const selectedBases = selectedIngredients.bases || [];
+            const baseColor = selectedBases.length > 0 
+                ? (BASE_COLORS[selectedBases[0]] || BASE_COLORS.default)
+                : BASE_COLORS.default;
+            baseEl.setAttribute('fill', baseColor);
+
+            // Update cheese visibility
+            const cheeseEl = document.getElementById('pizza-cheese');
+            const cheeseTexture = document.getElementById('cheese-texture');
+            const hasCheese = (selectedIngredients.cheeses || []).length > 0;
+            cheeseEl.setAttribute('opacity', hasCheese ? '0.85' : '0');
+            cheeseTexture.setAttribute('opacity', hasCheese ? '1' : '0');
+
+            // Update toppings
+            const toppingsContainer = document.getElementById('toppings-container');
+            toppingsContainer.innerHTML = '';
+
+            // Collect all topping emojis (meats, veggies, extras)
+            const toppingCategories = ['meats', 'veggies', 'extras'];
+            let allToppings = [];
+            
+            for (const cat of toppingCategories) {
+                const ids = selectedIngredients[cat] || [];
+                for (const id of ids) {
+                    const item = INGREDIENTS[cat]?.find(i => i.id === id);
+                    if (item) {
+                        allToppings.push(item.emoji);
+                    }
+                }
+            }
+
+            // Place toppings on pizza
+            const pizzaVisual = document.getElementById('pizza-visual');
+            const size = pizzaVisual.offsetWidth;
+            
+            allToppings.forEach((emoji, index) => {
+                if (index >= TOPPING_POSITIONS.length) return;
+                
+                const pos = TOPPING_POSITIONS[index];
+                const topping = document.createElement('span');
+                topping.className = 'topping';
+                topping.textContent = emoji;
+                topping.style.left = `${pos.x}%`;
+                topping.style.top = `${pos.y}%`;
+                topping.style.animationDelay = `${index * 0.05}s`;
+                toppingsContainer.appendChild(topping);
+            });
         }
 
         function updatePreview() {
@@ -694,7 +832,6 @@
             currentUser = name;
             document.getElementById('user-name-display').textContent = name;
 
-            // Try to load existing order
             try {
                 const response = await fetch(`/api/order/${TOKEN}?name=${encodeURIComponent(name)}`);
                 const data = await response.json();
@@ -703,6 +840,7 @@
                     selectedIngredients = data.order.ingredients;
                     renderCategories();
                     updatePreview();
+                    updatePizzaVisual();
                 }
             } catch (err) {
                 console.error('Failed to load order:', err);
@@ -710,6 +848,7 @@
 
             document.getElementById('name-screen').style.display = 'none';
             document.getElementById('order-screen').style.display = 'block';
+            updatePizzaVisual();
         }
 
         function logout() {
@@ -718,6 +857,7 @@
             
             renderCategories();
             updatePreview();
+            updatePizzaVisual();
 
             document.getElementById('name-screen').style.display = 'block';
             document.getElementById('order-screen').style.display = 'none';
