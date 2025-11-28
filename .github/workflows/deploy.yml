@@ -17,11 +17,25 @@ jobs:
         run: |
           # Pull latest code on PythonAnywhere via console API
           echo "Pulling latest code..."
-          curl -s -X POST \
+          HTTP_CODE=$(curl -s -w "%{http_code}" -o /tmp/console.json -X POST \
             -H "Authorization: Token $PA_API_TOKEN" \
             "https://www.pythonanywhere.com/api/v0/user/$PA_USERNAME/consoles/" \
-            -d "executable=bash&arguments=&working_directory=/home/$PA_USERNAME/funky_pizza" \
-            > /tmp/console.json
+            -d "executable=bash&arguments=&working_directory=/home/$PA_USERNAME/funky_pizza")
+          
+          # Check HTTP status code
+          if [ "$HTTP_CODE" -ne 200 ] && [ "$HTTP_CODE" -ne 201 ]; then
+            echo "Error: API request failed with HTTP code $HTTP_CODE"
+            echo "Response:"
+            cat /tmp/console.json
+            exit 1
+          fi
+          
+          # Check if response contains an 'id' field
+          if ! python3 -c "import sys, json; data=json.load(sys.stdin); exit(0 if 'id' in data else 1)" < /tmp/console.json 2>/dev/null; then
+            echo "Error: API response does not contain 'id' field. Response:"
+            cat /tmp/console.json
+            exit 1
+          fi
           
           CONSOLE_ID=$(cat /tmp/console.json | python3 -c "import sys, json; print(json.load(sys.stdin)['id'])")
           
