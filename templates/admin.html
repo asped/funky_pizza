@@ -784,6 +784,24 @@
             return TRANSLATIONS[currentLang]?.[key] || TRANSLATIONS['en']?.[key] || key;
         }
 
+        // Escape HTML to prevent XSS attacks
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // Escape for JavaScript string literals
+        function escapeJs(str) {
+            if (!str) return '';
+            return str.replace(/\\/g, '\\\\')
+                      .replace(/'/g, "\\'")
+                      .replace(/"/g, '\\"')
+                      .replace(/\n/g, '\\n')
+                      .replace(/\r/g, '\\r');
+        }
+
         function getIngredientName(item) {
             // Get name based on current language, fallback to name_en or legacy name
             if (currentLang === 'sk' && item.name_sk) return item.name_sk;
@@ -934,11 +952,14 @@
                     sectionsHTML = `<p class="no-ingredients">${t('no_ingredients_selected')}</p>` + sectionsHTML;
                 }
 
+                const safeKey = escapeJs(key);
+                const safeDisplayName = escapeHtml(order.display_name || key);
+
                 return `
-                    <div class="order-card ${isDone ? 'done' : ''}" data-key="${key}">
+                    <div class="order-card ${isDone ? 'done' : ''}" data-key="${escapeHtml(key)}">
                         <div class="order-header" onclick="toggleOrderExpand(this.parentElement)">
                             <div class="order-name">
-                                ${order.display_name || key}
+                                ${safeDisplayName}
                                 ${isDone ? `<span class="done-badge">${t('order_done_badge')}</span>` : ''}
                             </div>
                             <span class="order-toggle">▼</span>
@@ -947,10 +968,10 @@
                             <div class="order-content">
                                 <div class="order-actions">
                                     ${isDone 
-                                        ? `<button class="btn-action btn-undone" onclick="toggleDone('${key}', false)">${t('btn_undone')}</button>`
-                                        : `<button class="btn-action btn-done" onclick="toggleDone('${key}', true)">${t('btn_done')}</button>`
+                                        ? `<button class="btn-action btn-undone" onclick="toggleDone('${safeKey}', false)">${t('btn_undone')}</button>`
+                                        : `<button class="btn-action btn-done" onclick="toggleDone('${safeKey}', true)">${t('btn_done')}</button>`
                                     }
-                                    <button class="btn-action btn-delete-order" onclick="deleteOrder('${key}')">🗑️</button>
+                                    <button class="btn-action btn-delete-order" onclick="deleteOrder('${safeKey}')">🗑️</button>
                                 </div>
                                 ${sectionsHTML}
                             </div>
@@ -1064,7 +1085,7 @@
         async function removeIngredient(category, id) {
             const item = INGREDIENTS[category].find(i => i.id === id);
             const msg = t('confirm_delete_ingredient')
-                .replace('{name}', item?.name || id)
+                .replace('{name}', item ? getIngredientName(item) : id)
                 .replace('{category}', t('cat_' + category));
             if (!confirm(msg)) return;
 

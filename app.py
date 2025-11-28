@@ -5,6 +5,7 @@ A simple Flask app for ordering pizzas at a party!
 
 import json
 import os
+import re
 import secrets
 from flask import Flask, render_template, request, jsonify
 
@@ -102,7 +103,7 @@ def load_translations():
 def load_ingredients():
     """Load ingredients from file or create default."""
     if os.path.exists(INGREDIENTS_FILE):
-        with open(INGREDIENTS_FILE, "r") as f:
+        with open(INGREDIENTS_FILE, "r", encoding="utf-8") as f:
             return json.load(f)
     else:
         save_ingredients(DEFAULT_INGREDIENTS)
@@ -111,8 +112,8 @@ def load_ingredients():
 
 def save_ingredients(ingredients):
     """Save ingredients to file."""
-    with open(INGREDIENTS_FILE, "w") as f:
-        json.dump(ingredients, f, indent=2)
+    with open(INGREDIENTS_FILE, "w", encoding="utf-8") as f:
+        json.dump(ingredients, f, indent=2, ensure_ascii=False)
 
 
 def get_enabled_ingredients():
@@ -128,15 +129,15 @@ def get_enabled_ingredients():
 def load_orders():
     """Load orders from JSON file."""
     if os.path.exists(ORDERS_FILE):
-        with open(ORDERS_FILE, "r") as f:
+        with open(ORDERS_FILE, "r", encoding="utf-8") as f:
             return json.load(f)
     return {}
 
 
 def save_orders(orders):
     """Save orders to JSON file."""
-    with open(ORDERS_FILE, "w") as f:
-        json.dump(orders, f, indent=2)
+    with open(ORDERS_FILE, "w", encoding="utf-8") as f:
+        json.dump(orders, f, indent=2, ensure_ascii=False)
 
 
 TOKENS = load_tokens()
@@ -307,8 +308,8 @@ def add_ingredient(token, category):
     if not name_sk:
         name_sk = name_en
     
-    # Generate ID from English name
-    ingredient_id = name_en.lower().replace(" ", "_").replace("/", "_")
+    # Generate ID from English name - sanitize to only allow alphanumeric and underscores
+    ingredient_id = re.sub(r'[^a-z0-9]+', '_', name_en.lower()).strip('_')
     
     ingredients = load_ingredients()
     
