@@ -738,8 +738,13 @@
                 </div>
 
                 <div class="form-group">
-                    <label data-t="label_name">Name</label>
-                    <input type="text" id="ingredient-name" data-t-placeholder="name_placeholder_ingredient" placeholder="e.g. Pepperoni" maxlength="30" required>
+                    <label data-t="label_name_en">Name (English)</label>
+                    <input type="text" id="ingredient-name-en" data-t-placeholder="name_placeholder_en" placeholder="e.g. Pepperoni" maxlength="30" required>
+                </div>
+
+                <div class="form-group">
+                    <label data-t="label_name_sk">Name (Slovak)</label>
+                    <input type="text" id="ingredient-name-sk" data-t-placeholder="name_placeholder_sk" placeholder="e.g. Pepperoni" maxlength="30">
                 </div>
 
                 <div class="form-group">
@@ -777,6 +782,12 @@
 
         function t(key) {
             return TRANSLATIONS[currentLang]?.[key] || TRANSLATIONS['en']?.[key] || key;
+        }
+
+        function getIngredientName(item) {
+            // Get name based on current language, fallback to name_en or legacy name
+            if (currentLang === 'sk' && item.name_sk) return item.name_sk;
+            return item.name_en || item.name || item.id;
         }
 
         let selectedEmoji = "🍕";
@@ -839,7 +850,11 @@
 
         function getIngredientInfo(category, id) {
             const items = INGREDIENTS[category] || [];
-            return items.find(i => i.id === id) || { name: id, emoji: "❓" };
+            const item = items.find(i => i.id === id);
+            if (item) {
+                return { ...item, name: getIngredientName(item) };
+            }
+            return { name: id, emoji: "❓" };
         }
 
         function countTotalIngredients(orders) {
@@ -1012,7 +1027,7 @@
                             ${items.map(item => `
                                 <div class="ingredient-row ${item.enabled ? '' : 'disabled'}">
                                     <div class="ingredient-emoji">${item.emoji}</div>
-                                    <div class="ingredient-name">${item.name}</div>
+                                    <div class="ingredient-name">${getIngredientName(item)}</div>
                                     <div class="ingredient-actions">
                                         <div class="toggle-switch ${item.enabled ? 'enabled' : ''}" 
                                              onclick="toggleIngredient('${category}', '${item.id}', ${!item.enabled})"
@@ -1096,7 +1111,8 @@
             isEditMode = false;
             document.getElementById('modal-title').textContent = t('modal_add_title');
             document.getElementById('modal-title').dataset.t = 'modal_add_title';
-            document.getElementById('ingredient-name').value = '';
+            document.getElementById('ingredient-name-en').value = '';
+            document.getElementById('ingredient-name-sk').value = '';
             document.getElementById('edit-category').value = '';
             document.getElementById('edit-id').value = '';
             document.getElementById('category-select-group').style.display = 'block';
@@ -1116,7 +1132,8 @@
 
             document.getElementById('modal-title').textContent = t('modal_edit_title');
             document.getElementById('modal-title').dataset.t = 'modal_edit_title';
-            document.getElementById('ingredient-name').value = item.name;
+            document.getElementById('ingredient-name-en').value = item.name_en || item.name || '';
+            document.getElementById('ingredient-name-sk').value = item.name_sk || '';
             document.getElementById('edit-category').value = category;
             document.getElementById('edit-id').value = id;
             document.getElementById('category-select-group').style.display = 'none';
@@ -1140,8 +1157,9 @@
             document.getElementById('ingredient-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 
-                const name = document.getElementById('ingredient-name').value.trim();
-                if (!name) return;
+                const name_en = document.getElementById('ingredient-name-en').value.trim();
+                const name_sk = document.getElementById('ingredient-name-sk').value.trim();
+                if (!name_en) return;
 
                 if (isEditMode) {
                     const category = document.getElementById('edit-category').value;
@@ -1151,13 +1169,14 @@
                         const response = await fetch(`/api/ingredients/${TOKEN}/${category}/${id}`, {
                             method: 'PUT',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ name, emoji: selectedEmoji })
+                            body: JSON.stringify({ name_en, name_sk: name_sk || name_en, emoji: selectedEmoji })
                         });
                         
                         if (response.ok) {
                             const item = INGREDIENTS[category].find(i => i.id === id);
                             if (item) {
-                                item.name = name;
+                                item.name_en = name_en;
+                                item.name_sk = name_sk || name_en;
                                 item.emoji = selectedEmoji;
                             }
                             renderIngredients();
@@ -1173,7 +1192,7 @@
                         const response = await fetch(`/api/ingredients/${TOKEN}/${category}`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ name, emoji: selectedEmoji })
+                            body: JSON.stringify({ name_en, name_sk: name_sk || name_en, emoji: selectedEmoji })
                         });
                         
                         if (response.ok) {

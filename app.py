@@ -28,43 +28,44 @@ AVAILABLE_EMOJIS = [
 ]
 
 # Default ingredients (used on first run)
+# Each ingredient has name_en and name_sk for multilingual support
 DEFAULT_INGREDIENTS = {
     "bases": [
-        {"id": "tomato", "name": "Tomato Sauce", "emoji": "🍅", "enabled": True},
-        {"id": "white", "name": "White/Cream Sauce", "emoji": "🥛", "enabled": True},
-        {"id": "bbq", "name": "BBQ Sauce", "emoji": "🔥", "enabled": True},
-        {"id": "pesto", "name": "Pesto", "emoji": "🌿", "enabled": True},
+        {"id": "tomato", "name_en": "Tomato Sauce", "name_sk": "Paradajkový základ", "emoji": "🍅", "enabled": True},
+        {"id": "white", "name_en": "White/Cream Sauce", "name_sk": "Smotanový základ", "emoji": "🥛", "enabled": True},
+        {"id": "bbq", "name_en": "BBQ Sauce", "name_sk": "BBQ omáčka", "emoji": "🔥", "enabled": True},
+        {"id": "pesto", "name_en": "Pesto", "name_sk": "Pesto", "emoji": "🌿", "enabled": True},
     ],
     "cheeses": [
-        {"id": "mozzarella", "name": "Mozzarella", "emoji": "🧀", "enabled": True},
-        {"id": "parmesan", "name": "Parmesan", "emoji": "🧀", "enabled": True},
-        {"id": "gorgonzola", "name": "Gorgonzola", "emoji": "🧀", "enabled": True},
-        {"id": "goat", "name": "Goat Cheese", "emoji": "🐐", "enabled": True},
+        {"id": "mozzarella", "name_en": "Mozzarella", "name_sk": "Mozzarella", "emoji": "🧀", "enabled": True},
+        {"id": "parmesan", "name_en": "Parmesan", "name_sk": "Parmezán", "emoji": "🧀", "enabled": True},
+        {"id": "gorgonzola", "name_en": "Gorgonzola", "name_sk": "Gorgonzola", "emoji": "🧀", "enabled": True},
+        {"id": "goat", "name_en": "Goat Cheese", "name_sk": "Kozí syr", "emoji": "🐐", "enabled": True},
     ],
     "meats": [
-        {"id": "pepperoni", "name": "Pepperoni", "emoji": "🍖", "enabled": True},
-        {"id": "ham", "name": "Ham", "emoji": "🐷", "enabled": True},
-        {"id": "bacon", "name": "Bacon", "emoji": "🥓", "enabled": True},
-        {"id": "sausage", "name": "Italian Sausage", "emoji": "🌭", "enabled": True},
-        {"id": "chicken", "name": "Chicken", "emoji": "🍗", "enabled": True},
+        {"id": "pepperoni", "name_en": "Pepperoni", "name_sk": "Pepperoni", "emoji": "🍖", "enabled": True},
+        {"id": "ham", "name_en": "Ham", "name_sk": "Šunka", "emoji": "🐷", "enabled": True},
+        {"id": "bacon", "name_en": "Bacon", "name_sk": "Slanina", "emoji": "🥓", "enabled": True},
+        {"id": "sausage", "name_en": "Italian Sausage", "name_sk": "Talianská klobása", "emoji": "🌭", "enabled": True},
+        {"id": "chicken", "name_en": "Chicken", "name_sk": "Kura", "emoji": "🍗", "enabled": True},
     ],
     "veggies": [
-        {"id": "mushrooms", "name": "Mushrooms", "emoji": "🍄", "enabled": True},
-        {"id": "onions", "name": "Onions", "emoji": "🧅", "enabled": True},
-        {"id": "peppers", "name": "Bell Peppers", "emoji": "🫑", "enabled": True},
-        {"id": "olives", "name": "Olives", "emoji": "🫒", "enabled": True},
-        {"id": "tomatoes", "name": "Fresh Tomatoes", "emoji": "🍅", "enabled": True},
-        {"id": "spinach", "name": "Spinach", "emoji": "🥬", "enabled": True},
-        {"id": "jalapenos", "name": "Jalapeños", "emoji": "🌶️", "enabled": True},
-        {"id": "pineapple", "name": "Pineapple", "emoji": "🍍", "enabled": True},
-        {"id": "arugula", "name": "Arugula", "emoji": "🥗", "enabled": True},
+        {"id": "mushrooms", "name_en": "Mushrooms", "name_sk": "Huby", "emoji": "🍄", "enabled": True},
+        {"id": "onions", "name_en": "Onions", "name_sk": "Cibuľa", "emoji": "🧅", "enabled": True},
+        {"id": "peppers", "name_en": "Bell Peppers", "name_sk": "Papriky", "emoji": "🫑", "enabled": True},
+        {"id": "olives", "name_en": "Olives", "name_sk": "Olivy", "emoji": "🫒", "enabled": True},
+        {"id": "tomatoes", "name_en": "Fresh Tomatoes", "name_sk": "Čerstvé paradajky", "emoji": "🍅", "enabled": True},
+        {"id": "spinach", "name_en": "Spinach", "name_sk": "Špenát", "emoji": "🥬", "enabled": True},
+        {"id": "jalapenos", "name_en": "Jalapeños", "name_sk": "Jalapeños", "emoji": "🌶️", "enabled": True},
+        {"id": "pineapple", "name_en": "Pineapple", "name_sk": "Ananás", "emoji": "🍍", "enabled": True},
+        {"id": "arugula", "name_en": "Arugula", "name_sk": "Rukola", "emoji": "🥗", "enabled": True},
     ],
     "extras": [
-        {"id": "garlic", "name": "Extra Garlic", "emoji": "🧄", "enabled": True},
-        {"id": "basil", "name": "Fresh Basil", "emoji": "🌿", "enabled": True},
-        {"id": "oregano", "name": "Oregano", "emoji": "🌱", "enabled": True},
-        {"id": "chili", "name": "Chili Flakes", "emoji": "🌶️", "enabled": True},
-        {"id": "truffle", "name": "Truffle Oil", "emoji": "✨", "enabled": True},
+        {"id": "garlic", "name_en": "Extra Garlic", "name_sk": "Extra cesnak", "emoji": "🧄", "enabled": True},
+        {"id": "basil", "name_en": "Fresh Basil", "name_sk": "Čerstvá bazalka", "emoji": "🌿", "enabled": True},
+        {"id": "oregano", "name_en": "Oregano", "name_sk": "Oregano", "emoji": "🌱", "enabled": True},
+        {"id": "chili", "name_en": "Chili Flakes", "name_sk": "Chilli vločky", "emoji": "🌶️", "enabled": True},
+        {"id": "truffle", "name_en": "Truffle Oil", "name_sk": "Hľuzovkový olej", "emoji": "✨", "enabled": True},
     ]
 }
 
@@ -295,14 +296,19 @@ def add_ingredient(token, category):
         return jsonify({"error": "Invalid category"}), 400
     
     data = request.json
-    name = data.get("name", "").strip()
+    name_en = data.get("name_en", "").strip()
+    name_sk = data.get("name_sk", "").strip()
     emoji = data.get("emoji", "🍕")
     
-    if not name:
-        return jsonify({"error": "Name required"}), 400
+    if not name_en:
+        return jsonify({"error": "English name required"}), 400
     
-    # Generate ID from name
-    ingredient_id = name.lower().replace(" ", "_").replace("/", "_")
+    # Use Slovak name same as English if not provided
+    if not name_sk:
+        name_sk = name_en
+    
+    # Generate ID from English name
+    ingredient_id = name_en.lower().replace(" ", "_").replace("/", "_")
     
     ingredients = load_ingredients()
     
@@ -313,7 +319,8 @@ def add_ingredient(token, category):
     
     new_ingredient = {
         "id": ingredient_id,
-        "name": name,
+        "name_en": name_en,
+        "name_sk": name_sk,
         "emoji": emoji,
         "enabled": True
     }
@@ -345,8 +352,15 @@ def update_ingredient(token, category, ingredient_id):
     # Find the ingredient
     for item in ingredients[category]:
         if item["id"] == ingredient_id:
-            if "name" in data:
-                item["name"] = data["name"]
+            if "name_en" in data:
+                item["name_en"] = data["name_en"]
+            if "name_sk" in data:
+                item["name_sk"] = data["name_sk"]
+            # Support legacy "name" field for backwards compatibility
+            if "name" in data and "name_en" not in data:
+                item["name_en"] = data["name"]
+                if "name_sk" not in item:
+                    item["name_sk"] = data["name"]
             if "emoji" in data:
                 item["emoji"] = data["emoji"]
             if "enabled" in data:

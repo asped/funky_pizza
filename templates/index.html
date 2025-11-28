@@ -671,20 +671,10 @@
                             <circle cx="100" cy="100" r="88" fill="#C4956A"/>
                             <!-- Crust texture -->
                             <circle cx="100" cy="100" r="85" fill="#E8C49A" stroke="#D4A574" stroke-width="2"/>
-                            <!-- Inner pizza (sauce area) -->
+                            <!-- Inner pizza (sauce/base area) - visible ring -->
                             <circle id="pizza-base" cx="100" cy="100" r="75" fill="#D32F2F"/>
-                            <!-- Cheese layer -->
-                            <circle id="pizza-cheese" cx="100" cy="100" r="73" fill="#FFD54F" opacity="0"/>
-                            <!-- Cheese blobs for texture -->
-                            <g id="cheese-texture" opacity="0">
-                                <ellipse cx="70" cy="80" rx="20" ry="15" fill="#FFECB3"/>
-                                <ellipse cx="130" cy="75" rx="18" ry="12" fill="#FFECB3"/>
-                                <ellipse cx="100" cy="120" rx="22" ry="14" fill="#FFECB3"/>
-                                <ellipse cx="60" cy="115" rx="15" ry="10" fill="#FFECB3"/>
-                                <ellipse cx="140" cy="110" rx="16" ry="11" fill="#FFECB3"/>
-                                <ellipse cx="85" cy="70" rx="12" ry="8" fill="#FFF8E1"/>
-                                <ellipse cx="115" cy="130" rx="14" ry="9" fill="#FFF8E1"/>
-                            </g>
+                            <!-- Cheese layer - smaller to show base ring -->
+                            <circle id="pizza-cheese" cx="100" cy="100" r="60" fill="#FFF8DC" opacity="0"/>
                             <!-- Cut lines -->
                             <g id="cut-lines"></g>
                         </svg>
@@ -727,15 +717,53 @@
             default: '#D32F2F'
         };
 
-        // Topping positions in a nice distributed pattern
-        const TOPPING_POSITIONS = [
-            { x: 50, y: 35 }, { x: 65, y: 30 }, { x: 35, y: 45 },
-            { x: 75, y: 45 }, { x: 25, y: 55 }, { x: 55, y: 50 },
-            { x: 45, y: 65 }, { x: 70, y: 60 }, { x: 30, y: 70 },
-            { x: 60, y: 75 }, { x: 50, y: 55 }, { x: 40, y: 40 },
-            { x: 65, y: 70 }, { x: 35, y: 60 }, { x: 55, y: 45 },
-            { x: 75, y: 55 }, { x: 25, y: 45 }, { x: 45, y: 30 },
-        ];
+        // Cheese colors - white or orange based on type
+        const CHEESE_COLORS = {
+            mozzarella: '#FFF8DC',   // white/cream
+            parmesan: '#FFB347',     // orange
+            gorgonzola: '#FFF8DC',   // white/cream
+            goat: '#FFF8DC',         // white/cream
+            hermelin: '#FFF8DC',     // white/cream
+            camembert: '#FFF8DC',    // white/cream
+            emmental: '#FFB347',     // orange
+            cheddar: '#FFB347',      // orange
+            default: '#FFD54F'       // golden yellow
+        };
+
+        // Generate circular positions for toppings
+        function getToppingPositions(count) {
+            const positions = [];
+            const cx = 50, cy = 50;
+            
+            if (count === 0) return positions;
+            
+            if (count === 1) {
+                positions.push({ x: cx, y: cy });
+                return positions;
+            }
+            
+            // Distribute in concentric circles
+            const rings = count <= 6 ? 1 : count <= 14 ? 2 : 3;
+            let placed = 0;
+            
+            for (let ring = 0; ring < rings && placed < count; ring++) {
+                const radius = ring === 0 ? (rings === 1 ? 22 : 12) : (ring === 1 ? 24 : 32);
+                const itemsInRing = ring === 0 ? Math.min(count, 6) : Math.min(count - placed, 8);
+                const angleStep = (2 * Math.PI) / itemsInRing;
+                const startAngle = -Math.PI / 2 + (ring * 0.3); // Offset each ring slightly
+                
+                for (let i = 0; i < itemsInRing && placed < count; i++) {
+                    const angle = startAngle + i * angleStep;
+                    positions.push({
+                        x: cx + radius * Math.cos(angle),
+                        y: cy + radius * Math.sin(angle)
+                    });
+                    placed++;
+                }
+            }
+            
+            return positions;
+        }
 
         function t(key) {
             return TRANSLATIONS[currentLang]?.[key] || TRANSLATIONS['en']?.[key] || key;
@@ -853,6 +881,12 @@
             updatePreview();
         }
 
+        function getIngredientName(item) {
+            // Get name based on current language, fallback to name_en or legacy name
+            if (currentLang === 'sk' && item.name_sk) return item.name_sk;
+            return item.name_en || item.name || item.id;
+        }
+
         function renderCategories() {
             const container = document.getElementById('categories');
             container.innerHTML = '';
@@ -872,7 +906,7 @@
                                 <input type="checkbox" name="${category}" value="${item.id}" 
                                        ${selectedIngredients[category]?.includes(item.id) ? 'checked' : ''}>
                                 <span class="emoji">${item.emoji}</span>
-                                <span class="name">${item.name}</span>
+                                <span class="name">${getIngredientName(item)}</span>
                                 <span class="checkmark">✓</span>
                             </label>
                         `).join('')}
@@ -919,12 +953,19 @@
                 : BASE_COLORS.default;
             baseEl.setAttribute('fill', baseColor);
 
-            // Update cheese visibility
+            // Update cheese - color based on selected cheese type
             const cheeseEl = document.getElementById('pizza-cheese');
-            const cheeseTexture = document.getElementById('cheese-texture');
-            const hasCheese = (selectedIngredients.cheeses || []).length > 0;
-            cheeseEl.setAttribute('opacity', hasCheese ? '0.85' : '0');
-            cheeseTexture.setAttribute('opacity', hasCheese ? '1' : '0');
+            const selectedCheeses = selectedIngredients.cheeses || [];
+            const hasCheese = selectedCheeses.length > 0;
+            
+            if (hasCheese) {
+                // Get color from first selected cheese
+                const cheeseColor = CHEESE_COLORS[selectedCheeses[0]] || CHEESE_COLORS.default;
+                cheeseEl.setAttribute('fill', cheeseColor);
+                cheeseEl.setAttribute('opacity', '1');
+            } else {
+                cheeseEl.setAttribute('opacity', '0');
+            }
 
             // Update cut lines
             const cutLinesEl = document.getElementById('cut-lines');
@@ -970,14 +1011,14 @@
                 }
             }
 
-            // Place toppings on pizza
-            const pizzaVisual = document.getElementById('pizza-visual');
-            const size = pizzaVisual.offsetWidth;
+            // Get circular positions based on topping count
+            const positions = getToppingPositions(allToppings.length);
             
+            // Place toppings on pizza in circular pattern
             allToppings.forEach((emoji, index) => {
-                if (index >= TOPPING_POSITIONS.length) return;
+                if (index >= positions.length) return;
                 
-                const pos = TOPPING_POSITIONS[index];
+                const pos = positions[index];
                 const topping = document.createElement('span');
                 topping.className = 'topping';
                 topping.textContent = emoji;
@@ -997,7 +1038,7 @@
                 for (const id of ids) {
                     const item = INGREDIENTS[category]?.find(i => i.id === id);
                     if (item) {
-                        allSelected.push(`${item.emoji} ${item.name}`);
+                        allSelected.push(`${item.emoji} ${getIngredientName(item)}`);
                     }
                 }
             }
