@@ -127,6 +127,27 @@ pizza-party/
 - **Storage**: JSON file (no database needed)
 - **Fonts**: Fredoka + Nunito (Google Fonts)
 
+## Deploying to PythonAnywhere
+
+This project includes a GitHub Actions workflow for automatic deployment.
+
+### 1. Get Your PythonAnywhere API Token
+
+1. Create an account at [pythonanywhere.com](https://www.pythonanywhere.com)
+2. Go to **Account** → **API token**
+3. Click **Create a new API token** and copy it
+
+### 2. Set Up GitHub Secrets
+
+In your GitHub repository, go to **Settings** → **Secrets and variables** → **Actions**, and add:
+
+| Secret Name | Value |
+|-------------|-------|
+| `PYTHONANYWHERE_API_USER` | Your PythonAnywhere username |
+| `PYTHONANYWHERE_API_TOKEN` | Your API token from step 1 |
+
+Now every push to `master` will automatically deploy to PythonAnywhere! 🚀
+
 ## Tips for Your Party
 
 1. 🖨️ Print a QR code for the party link
