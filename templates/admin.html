@@ -289,7 +289,7 @@
         }
 
         .section-title {
-            font-size: 1rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             color: rgba(255, 255, 255, 0.7);
@@ -677,7 +677,7 @@
             .emoji-picker { grid-template-columns: repeat(6, 1fr); }
             
             /* Orders readability on mobile */
-            .section-title { font-size: 0.9rem; }
+            .section-title { font-size: 0.8rem; }
             .ingredient-tag { font-size: 0.95rem; padding: 6px 12px; }
             .order-section { margin-bottom: 14px; }
         }
@@ -894,9 +894,28 @@
             card.classList.toggle('expanded');
         }
 
-        function renderOrders(orders) {
+        function getExpandedOrders() {
+            const expanded = [];
+            document.querySelectorAll('.order-card.expanded').forEach(card => {
+                const key = card.dataset.key;
+                if (key) expanded.push(key);
+            });
+            return expanded;
+        }
+
+        function restoreExpandedOrders(expandedKeys) {
+            expandedKeys.forEach(key => {
+                const card = document.querySelector(`.order-card[data-key="${key}"]`);
+                if (card) card.classList.add('expanded');
+            });
+        }
+
+        function renderOrders(orders, preserveExpanded = false) {
             const container = document.getElementById('orders-container');
             const ordersList = Object.entries(orders);
+            
+            // Save expanded state before re-rendering
+            const expandedKeys = preserveExpanded ? getExpandedOrders() : [];
 
             // Sort: not done first, then done
             ordersList.sort((a, b) => {
@@ -984,6 +1003,11 @@
                     </div>
                 `;
             }).join('');
+            
+            // Restore expanded state after re-rendering
+            if (preserveExpanded && expandedKeys.length > 0) {
+                restoreExpandedOrders(expandedKeys);
+            }
         }
 
         async function loadOrders() {
@@ -992,7 +1016,7 @@
                 const data = await response.json();
                 if (data.orders) {
                     ORDERS = data.orders;
-                    renderOrders(ORDERS);
+                    renderOrders(ORDERS, true);  // Preserve expanded state on auto-refresh
                 }
             } catch (err) {
                 console.error('Failed to load orders:', err);
@@ -1009,7 +1033,7 @@
                 
                 if (response.ok) {
                     ORDERS[name.toLowerCase()].done = done;
-                    renderOrders(ORDERS);
+                    renderOrders(ORDERS, true);  // Preserve expanded state
                 }
             } catch (err) {
                 console.error('Failed to toggle done:', err);
@@ -1027,7 +1051,7 @@
                 
                 if (response.ok) {
                     delete ORDERS[name.toLowerCase()];
-                    renderOrders(ORDERS);
+                    renderOrders(ORDERS, true);  // Preserve expanded state
                 }
             } catch (err) {
                 console.error('Failed to delete order:', err);
