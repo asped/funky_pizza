@@ -14,8 +14,9 @@ app = Flask(__name__)
 ORDERS_FILE = "orders.json"
 TOKENS_FILE = "tokens.json"
 INGREDIENTS_FILE = "ingredients.json"
+TRANSLATIONS_FILE = "translations.json"
 
-# Static list of categories (cannot be changed)
+# Static list of categories in display order
 CATEGORIES = ["bases", "cheeses", "meats", "veggies", "extras"]
 
 # Fixed list of available emojis for ingredients
@@ -89,6 +90,14 @@ def load_tokens():
         return tokens
 
 
+def load_translations():
+    """Load translations from file."""
+    if os.path.exists(TRANSLATIONS_FILE):
+        with open(TRANSLATIONS_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {"en": {}, "sk": {}}
+
+
 def load_ingredients():
     """Load ingredients from file or create default."""
     if os.path.exists(INGREDIENTS_FILE):
@@ -109,7 +118,8 @@ def get_enabled_ingredients():
     """Get only enabled ingredients for the party page."""
     all_ingredients = load_ingredients()
     enabled = {}
-    for category, items in all_ingredients.items():
+    for category in CATEGORIES:
+        items = all_ingredients.get(category, [])
         enabled[category] = [item for item in items if item.get("enabled", True)]
     return enabled
 
@@ -143,7 +153,14 @@ def party(token):
     if token != TOKENS["party"]:
         return "🚫 Invalid party link!", 403
     ingredients = get_enabled_ingredients()
-    return render_template("index.html", token=token, ingredients=ingredients)
+    translations = load_translations()
+    return render_template(
+        "index.html", 
+        token=token, 
+        ingredients=ingredients,
+        categories=CATEGORIES,
+        translations=translations
+    )
 
 
 @app.route("/admin/<token>")
@@ -153,12 +170,14 @@ def admin(token):
         return "🚫 Invalid admin link!", 403
     orders = load_orders()
     ingredients = load_ingredients()
+    translations = load_translations()
     return render_template(
         "admin.html", 
         orders=orders, 
         ingredients=ingredients,
         categories=CATEGORIES,
-        available_emojis=AVAILABLE_EMOJIS
+        available_emojis=AVAILABLE_EMOJIS,
+        translations=translations
     )
 
 
@@ -193,9 +212,14 @@ def save_order(token):
         return jsonify({"error": "Name required"}), 400
     
     orders = load_orders()
+    
+    # Preserve done status if it exists
+    existing_done = orders.get(name, {}).get("done", False)
+    
     orders[name] = {
         "display_name": data.get("name", "").strip(),
-        "ingredients": ingredients
+        "ingredients": ingredients,
+        "done": existing_done
     }
     save_orders(orders)
     
@@ -224,6 +248,26 @@ def delete_order(token, name):
         del orders[name_lower]
         save_orders(orders)
         return jsonify({"success": True})
+    return jsonify({"error": "Order not found"}), 404
+
+
+@app.route("/api/order/<token>/<name>/done", methods=["PUT"])
+def toggle_order_done(token, name):
+    """Toggle done status of an order (admin only)."""
+    if token != TOKENS["admin"]:
+        return jsonify({"error": "Invalid token"}), 403
+    
+    data = request.json
+    done = data.get("done", False)
+    
+    orders = load_orders()
+    name_lower = name.lower()
+    
+    if name_lower in orders:
+        orders[name_lower]["done"] = done
+        save_orders(orders)
+        return jsonify({"success": True, "done": done})
+    
     return jsonify({"error": "Order not found"}), 404
 
 

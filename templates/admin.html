@@ -39,12 +39,12 @@
 
         header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         h1 {
             font-family: 'Fredoka', sans-serif;
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             background: linear-gradient(135deg, var(--pizza-orange), var(--pizza-yellow));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -52,21 +52,47 @@
             margin-bottom: 10px;
         }
 
+        /* Language toggle */
+        .lang-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .lang-btn {
+            padding: 6px 14px;
+            font-size: 0.8rem;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .lang-btn.active {
+            background: var(--pizza-orange);
+            border-color: var(--pizza-orange);
+        }
+
         /* Tabs */
         .tabs {
             display: flex;
             justify-content: center;
             gap: 10px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .tab-btn {
-            padding: 12px 30px;
+            padding: 10px 25px;
             font-family: 'Fredoka', sans-serif;
-            font-size: 1rem;
+            font-size: 0.95rem;
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 25px;
+            border-radius: 20px;
             color: white;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -93,28 +119,28 @@
         .stats-bar {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            margin-bottom: 25px;
+            gap: 15px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
         }
 
         .stat {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 15px 25px;
+            border-radius: 12px;
+            padding: 12px 20px;
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .stat-number {
             font-family: 'Fredoka', sans-serif;
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: var(--pizza-orange);
         }
 
         .stat-label {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: rgba(255, 255, 255, 0.7);
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -123,62 +149,143 @@
         /* Orders Grid */
         .orders-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
         }
 
         .order-card {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 20px;
+            border-radius: 15px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
+            overflow: hidden;
         }
 
         .order-card:hover {
             background: rgba(255, 255, 255, 0.08);
-            border-color: var(--pizza-orange);
+        }
+
+        .order-card.done {
+            opacity: 0.6;
+            order: 999;
+        }
+
+        .order-card.done .order-header {
+            background: rgba(76, 175, 80, 0.2);
         }
 
         .order-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .order-header:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .order-name {
             font-family: 'Fredoka', sans-serif;
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .order-name::before {
-            content: "🍕 ";
+            content: "🍕";
         }
 
-        .btn-delete {
-            background: rgba(230, 57, 70, 0.2);
-            color: var(--pizza-red);
+        .done-badge {
+            font-size: 0.7rem;
+            background: var(--pizza-green);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 600;
+        }
+
+        .order-toggle {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .order-card.expanded .order-toggle {
+            transform: rotate(180deg);
+        }
+
+        .order-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .order-card.expanded .order-body {
+            max-height: 500px;
+        }
+
+        .order-content {
+            padding: 15px;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 0.8rem;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 600;
             border: none;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 0.9rem;
             transition: all 0.2s ease;
         }
 
-        .btn-delete:hover {
+        .btn-done {
+            background: var(--pizza-green);
+            color: white;
+        }
+
+        .btn-done:hover {
+            background: #43A047;
+        }
+
+        .btn-undone {
+            background: var(--pizza-orange);
+            color: white;
+        }
+
+        .btn-undone:hover {
+            background: #E59347;
+        }
+
+        .btn-delete-order {
+            background: rgba(230, 57, 70, 0.2);
+            color: var(--pizza-red);
+        }
+
+        .btn-delete-order:hover {
             background: var(--pizza-red);
             color: white;
         }
 
         .order-section {
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .section-title {
@@ -186,53 +293,55 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             color: rgba(255, 255, 255, 0.5);
-            margin-bottom: 6px;
+            margin-bottom: 5px;
         }
 
         .ingredients-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
+            gap: 5px;
         }
 
         .ingredient-tag {
             background: rgba(244, 162, 97, 0.2);
             color: var(--pizza-orange);
-            padding: 4px 10px;
-            border-radius: 15px;
-            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
             font-weight: 600;
         }
 
         .no-ingredients {
             color: rgba(255, 255, 255, 0.4);
             font-style: italic;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
 
         .empty-state {
             text-align: center;
-            padding: 60px 30px;
+            padding: 50px 25px;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
+            border-radius: 15px;
             border: 2px dashed rgba(255, 255, 255, 0.2);
             grid-column: 1 / -1;
         }
 
         .empty-state .icon {
-            font-size: 60px;
-            margin-bottom: 15px;
+            font-size: 50px;
+            margin-bottom: 12px;
             opacity: 0.5;
         }
 
         .empty-state h2 {
             font-family: 'Fredoka', sans-serif;
             color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 8px;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
         }
 
         .empty-state p {
             color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
         }
 
         /* Category colors */
@@ -245,61 +354,60 @@
         /* ============ INGREDIENTS MANAGEMENT ============ */
         .ingredients-manager {
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 25px;
+            border-radius: 15px;
+            padding: 20px;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .category-section {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .category-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .category-title {
             font-family: 'Fredoka', sans-serif;
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             color: var(--pizza-orange);
         }
 
         .btn-add {
-            padding: 8px 16px;
-            font-size: 0.85rem;
+            padding: 6px 14px;
+            font-size: 0.8rem;
             font-family: 'Nunito', sans-serif;
             font-weight: 600;
             background: var(--pizza-green);
             color: white;
             border: none;
-            border-radius: 20px;
+            border-radius: 15px;
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
         .btn-add:hover {
             background: #43A047;
-            transform: translateY(-1px);
         }
 
         .ingredients-table {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         }
 
         .ingredient-row {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px 15px;
+            gap: 10px;
+            padding: 10px 12px;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
+            border-radius: 10px;
             transition: all 0.2s ease;
         }
 
@@ -312,8 +420,8 @@
         }
 
         .ingredient-emoji {
-            font-size: 1.5rem;
-            width: 40px;
+            font-size: 1.3rem;
+            width: 35px;
             text-align: center;
         }
 
@@ -321,20 +429,21 @@
             flex: 1;
             font-weight: 600;
             color: white;
+            font-size: 0.9rem;
         }
 
         .ingredient-actions {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             align-items: center;
         }
 
         .toggle-switch {
             position: relative;
-            width: 44px;
-            height: 24px;
+            width: 40px;
+            height: 22px;
             background: rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
+            border-radius: 11px;
             cursor: pointer;
             transition: all 0.2s ease;
         }
@@ -346,8 +455,8 @@
         .toggle-switch::after {
             content: '';
             position: absolute;
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             background: white;
             border-radius: 50%;
             top: 3px;
@@ -356,16 +465,16 @@
         }
 
         .toggle-switch.enabled::after {
-            left: 23px;
+            left: 21px;
         }
 
         .btn-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
             border: none;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
@@ -413,9 +522,9 @@
 
         .modal {
             background: #1a1a2e;
-            border-radius: 20px;
-            padding: 25px;
-            max-width: 400px;
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 380px;
             width: 100%;
             border: 1px solid rgba(255, 255, 255, 0.1);
             animation: modalPop 0.3s ease-out;
@@ -429,29 +538,30 @@
         .modal h3 {
             font-family: 'Fredoka', sans-serif;
             color: var(--pizza-orange);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-align: center;
+            font-size: 1.2rem;
         }
 
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 15px;
         }
 
         .form-group label {
             display: block;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 6px;
+            margin-bottom: 5px;
         }
 
         .form-group input, .form-group select {
             width: 100%;
-            padding: 12px 15px;
-            font-size: 1rem;
+            padding: 10px 12px;
+            font-size: 0.95rem;
             font-family: 'Nunito', sans-serif;
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
+            border-radius: 8px;
             color: white;
             outline: none;
             transition: all 0.2s ease;
@@ -469,23 +579,23 @@
         /* Emoji picker */
         .emoji-picker {
             display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            gap: 6px;
-            max-height: 200px;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            max-height: 160px;
             overflow-y: auto;
-            padding: 10px;
+            padding: 8px;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
+            border-radius: 8px;
         }
 
         .emoji-option {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.3rem;
-            border-radius: 8px;
+            font-size: 1.2rem;
+            border-radius: 6px;
             cursor: pointer;
             transition: all 0.2s ease;
             border: 2px solid transparent;
@@ -503,16 +613,16 @@
         .modal-actions {
             display: flex;
             gap: 10px;
-            margin-top: 20px;
+            margin-top: 15px;
         }
 
         .modal-actions button {
             flex: 1;
-            padding: 12px 20px;
+            padding: 10px 15px;
             font-family: 'Fredoka', sans-serif;
-            font-size: 1rem;
+            font-size: 0.95rem;
             border: none;
-            border-radius: 10px;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s ease;
         }
@@ -538,15 +648,15 @@
         /* Refresh button */
         .refresh-btn {
             position: fixed;
-            bottom: 25px;
-            right: 25px;
-            width: 50px;
-            height: 50px;
+            bottom: 20px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--pizza-orange), var(--pizza-red));
             border: none;
             color: white;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(244, 162, 97, 0.5);
             transition: all 0.3s ease;
@@ -557,12 +667,12 @@
         }
 
         @media (max-width: 600px) {
-            h1 { font-size: 1.8rem; }
+            h1 { font-size: 1.6rem; }
             .tabs { flex-wrap: wrap; }
-            .tab-btn { padding: 10px 20px; font-size: 0.9rem; }
+            .tab-btn { padding: 8px 18px; font-size: 0.85rem; }
             .orders-grid { grid-template-columns: 1fr; }
             .ingredient-row { flex-wrap: wrap; }
-            .ingredient-actions { width: 100%; justify-content: flex-end; margin-top: 8px; }
+            .ingredient-actions { width: 100%; justify-content: flex-end; margin-top: 6px; }
             .emoji-picker { grid-template-columns: repeat(6, 1fr); }
         }
     </style>
@@ -570,12 +680,17 @@
 <body>
     <div class="container">
         <header>
-            <h1>👑 Pizza Command Center</h1>
+            <h1 data-t="admin_title">👑 Pizza Command Center</h1>
         </header>
 
+        <div class="lang-toggle">
+            <button class="lang-btn active" data-lang="en">EN</button>
+            <button class="lang-btn" data-lang="sk">SK</button>
+        </div>
+
         <div class="tabs">
-            <button class="tab-btn active" data-tab="orders">📋 Orders</button>
-            <button class="tab-btn" data-tab="ingredients">🧑‍🍳 Ingredients</button>
+            <button class="tab-btn active" data-tab="orders" data-t="tab_orders">📋 Orders</button>
+            <button class="tab-btn" data-tab="ingredients" data-t="tab_ingredients">🧑‍🍳 Ingredients</button>
         </div>
 
         <!-- Orders Tab -->
@@ -583,11 +698,11 @@
             <div class="stats-bar">
                 <div class="stat">
                     <div class="stat-number" id="total-orders">0</div>
-                    <div class="stat-label">Orders</div>
+                    <div class="stat-label" data-t="stat_orders">Orders</div>
                 </div>
                 <div class="stat">
                     <div class="stat-number" id="total-ingredients">0</div>
-                    <div class="stat-label">Ingredients</div>
+                    <div class="stat-label" data-t="stat_ingredients">Ingredients</div>
                 </div>
             </div>
 
@@ -609,33 +724,33 @@
     <!-- Add/Edit Modal -->
     <div class="modal-overlay" id="modal-overlay">
         <div class="modal">
-            <h3 id="modal-title">Add Ingredient</h3>
+            <h3 id="modal-title" data-t="modal_add_title">Add Ingredient</h3>
             <form id="ingredient-form">
                 <input type="hidden" id="edit-category">
                 <input type="hidden" id="edit-id">
                 
                 <div class="form-group" id="category-select-group">
-                    <label>Category</label>
+                    <label data-t="label_category">Category</label>
                     <select id="ingredient-category">
                         <!-- Categories will be populated -->
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label>Name</label>
-                    <input type="text" id="ingredient-name" placeholder="e.g. Pepperoni" maxlength="30" required>
+                    <label data-t="label_name">Name</label>
+                    <input type="text" id="ingredient-name" data-t-placeholder="name_placeholder_ingredient" placeholder="e.g. Pepperoni" maxlength="30" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Emoji</label>
+                    <label data-t="label_emoji">Emoji</label>
                     <div class="emoji-picker" id="emoji-picker">
                         <!-- Emojis will be populated -->
                     </div>
                 </div>
 
                 <div class="modal-actions">
-                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="btn-confirm">Save</button>
+                    <button type="button" class="btn-cancel" onclick="closeModal()" data-t="btn_cancel">Cancel</button>
+                    <button type="submit" class="btn-confirm" data-t="btn_save_modal">Save</button>
                 </div>
             </form>
         </div>
@@ -645,26 +760,58 @@
         const TOKEN = window.location.pathname.split('/').pop();
         const CATEGORIES = {{ categories | tojson }};
         const AVAILABLE_EMOJIS = {{ available_emojis | tojson }};
+        const TRANSLATIONS = {{ translations | tojson }};
+        
         let INGREDIENTS = {{ ingredients | tojson }};
         let ORDERS = {{ orders | tojson }};
+        let currentLang = 'en';
 
-        const CATEGORY_NAMES = {
-            bases: "🍅 Base",
-            cheeses: "🧀 Cheese",
-            meats: "🥓 Meats",
-            veggies: "🥬 Veggies",
-            extras: "✨ Extras"
-        };
+        function t(key) {
+            return TRANSLATIONS[currentLang]?.[key] || TRANSLATIONS['en']?.[key] || key;
+        }
 
         let selectedEmoji = "🍕";
         let isEditMode = false;
 
         function init() {
+            const savedLang = localStorage.getItem('pizzaLang') || 'en';
+            setLang(savedLang);
+            
             setupTabs();
+            setupLangToggle();
             renderOrders(ORDERS);
             renderIngredients();
             setupEmojiPicker();
             setupForm();
+            populateCategorySelect();
+        }
+
+        function setupLangToggle() {
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.addEventListener('click', () => setLang(btn.dataset.lang));
+            });
+        }
+
+        function setLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('pizzaLang', lang);
+            
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+            
+            // Update all translatable elements
+            document.querySelectorAll('[data-t]').forEach(el => {
+                el.textContent = t(el.dataset.t);
+            });
+            
+            document.querySelectorAll('[data-t-placeholder]').forEach(el => {
+                el.placeholder = t(el.dataset.tPlaceholder);
+            });
+            
+            // Re-render with new language
+            renderOrders(ORDERS);
+            renderIngredients();
             populateCategorySelect();
         }
 
@@ -696,9 +843,20 @@
             return count;
         }
 
+        function toggleOrderExpand(card) {
+            card.classList.toggle('expanded');
+        }
+
         function renderOrders(orders) {
             const container = document.getElementById('orders-container');
             const ordersList = Object.entries(orders);
+
+            // Sort: not done first, then done
+            ordersList.sort((a, b) => {
+                const aDone = a[1].done ? 1 : 0;
+                const bDone = b[1].done ? 1 : 0;
+                return aDone - bDone;
+            });
 
             document.getElementById('total-orders').textContent = ordersList.length;
             document.getElementById('total-ingredients').textContent = countTotalIngredients(orders);
@@ -707,8 +865,8 @@
                 container.innerHTML = `
                     <div class="empty-state">
                         <div class="icon">🍕</div>
-                        <h2>No orders yet!</h2>
-                        <p>Share the party link and wait for orders...</p>
+                        <h2 data-t="no_orders_title">${t('no_orders_title')}</h2>
+                        <p data-t="no_orders_subtitle">${t('no_orders_subtitle')}</p>
                     </div>
                 `;
                 return;
@@ -717,14 +875,16 @@
             container.innerHTML = ordersList.map(([key, order]) => {
                 const ingredients = order.ingredients || {};
                 const hasIngredients = Object.values(ingredients).some(arr => arr.length > 0);
+                const isDone = order.done || false;
 
                 let sectionsHTML = '';
-                for (const [category, ids] of Object.entries(ingredients)) {
+                for (const category of CATEGORIES) {
+                    const ids = ingredients[category] || [];
                     if (ids.length === 0) continue;
                     
                     sectionsHTML += `
                         <div class="order-section">
-                            <div class="section-title">${CATEGORY_NAMES[category] || category}</div>
+                            <div class="section-title">${t('cat_' + category)}</div>
                             <div class="ingredients-list">
                                 ${ids.map(id => {
                                     const info = getIngredientInfo(category, id);
@@ -736,16 +896,30 @@
                 }
 
                 if (!hasIngredients) {
-                    sectionsHTML = '<p class="no-ingredients">No ingredients selected 🤔</p>';
+                    sectionsHTML = `<p class="no-ingredients">${t('no_ingredients_selected')}</p>`;
                 }
 
                 return `
-                    <div class="order-card">
-                        <div class="order-header">
-                            <div class="order-name">${order.display_name || key}</div>
-                            <button class="btn-delete" onclick="deleteOrder('${key}')" title="Delete">🗑️</button>
+                    <div class="order-card ${isDone ? 'done' : ''}" data-key="${key}">
+                        <div class="order-header" onclick="toggleOrderExpand(this.parentElement)">
+                            <div class="order-name">
+                                ${order.display_name || key}
+                                ${isDone ? `<span class="done-badge">${t('order_done_badge')}</span>` : ''}
+                            </div>
+                            <span class="order-toggle">▼</span>
                         </div>
-                        ${sectionsHTML}
+                        <div class="order-body">
+                            <div class="order-content">
+                                <div class="order-actions">
+                                    ${isDone 
+                                        ? `<button class="btn-action btn-undone" onclick="toggleDone('${key}', false)">${t('btn_undone')}</button>`
+                                        : `<button class="btn-action btn-done" onclick="toggleDone('${key}', true)">${t('btn_done')}</button>`
+                                    }
+                                    <button class="btn-action btn-delete-order" onclick="deleteOrder('${key}')">🗑️</button>
+                                </div>
+                                ${sectionsHTML}
+                            </div>
+                        </div>
                     </div>
                 `;
             }).join('');
@@ -764,8 +938,26 @@
             }
         }
 
+        async function toggleDone(name, done) {
+            try {
+                const response = await fetch(`/api/order/${TOKEN}/${encodeURIComponent(name)}/done`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ done })
+                });
+                
+                if (response.ok) {
+                    ORDERS[name.toLowerCase()].done = done;
+                    renderOrders(ORDERS);
+                }
+            } catch (err) {
+                console.error('Failed to toggle done:', err);
+            }
+        }
+
         async function deleteOrder(name) {
-            if (!confirm(`Delete ${name}'s pizza order?`)) return;
+            const displayName = ORDERS[name.toLowerCase()]?.display_name || name;
+            if (!confirm(t('confirm_delete_order').replace('{name}', displayName))) return;
 
             try {
                 const response = await fetch(`/api/order/${TOKEN}/${encodeURIComponent(name)}`, {
@@ -773,7 +965,8 @@
                 });
                 
                 if (response.ok) {
-                    loadOrders();
+                    delete ORDERS[name.toLowerCase()];
+                    renderOrders(ORDERS);
                 }
             } catch (err) {
                 console.error('Failed to delete order:', err);
@@ -791,11 +984,11 @@
                 return `
                     <div class="category-section">
                         <div class="category-header">
-                            <div class="category-title">${CATEGORY_NAMES[category] || category}</div>
-                            <button class="btn-add" onclick="openAddModal('${category}')">+ Add</button>
+                            <div class="category-title">${t('cat_' + category)}</div>
+                            <button class="btn-add" onclick="openAddModal('${category}')">${t('btn_add')}</button>
                         </div>
                         <div class="ingredients-table">
-                            ${items.length === 0 ? '<p class="no-ingredients">No ingredients in this category</p>' : ''}
+                            ${items.length === 0 ? `<p class="no-ingredients">${t('no_ingredients_category')}</p>` : ''}
                             ${items.map(item => `
                                 <div class="ingredient-row ${item.enabled ? '' : 'disabled'}">
                                     <div class="ingredient-emoji">${item.emoji}</div>
@@ -835,7 +1028,10 @@
 
         async function removeIngredient(category, id) {
             const item = INGREDIENTS[category].find(i => i.id === id);
-            if (!confirm(`Remove "${item?.name || id}" from ${category}?`)) return;
+            const msg = t('confirm_delete_ingredient')
+                .replace('{name}', item?.name || id)
+                .replace('{category}', t('cat_' + category));
+            if (!confirm(msg)) return;
 
             try {
                 const response = await fetch(`/api/ingredients/${TOKEN}/${category}/${id}`, {
@@ -872,13 +1068,14 @@
         function populateCategorySelect() {
             const select = document.getElementById('ingredient-category');
             select.innerHTML = CATEGORIES.map(cat => 
-                `<option value="${cat}">${CATEGORY_NAMES[cat] || cat}</option>`
+                `<option value="${cat}">${t('cat_' + cat)}</option>`
             ).join('');
         }
 
         function openAddModal(category = null) {
             isEditMode = false;
-            document.getElementById('modal-title').textContent = 'Add Ingredient';
+            document.getElementById('modal-title').textContent = t('modal_add_title');
+            document.getElementById('modal-title').dataset.t = 'modal_add_title';
             document.getElementById('ingredient-name').value = '';
             document.getElementById('edit-category').value = '';
             document.getElementById('edit-id').value = '';
@@ -897,7 +1094,8 @@
             const item = INGREDIENTS[category].find(i => i.id === id);
             if (!item) return;
 
-            document.getElementById('modal-title').textContent = 'Edit Ingredient';
+            document.getElementById('modal-title').textContent = t('modal_edit_title');
+            document.getElementById('modal-title').dataset.t = 'modal_edit_title';
             document.getElementById('ingredient-name').value = item.name;
             document.getElementById('edit-category').value = category;
             document.getElementById('edit-id').value = id;

@@ -38,7 +38,7 @@
 
         header {
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             animation: slideDown 0.4s ease-out;
         }
 
@@ -54,28 +54,48 @@
             text-shadow: 2px 2px 0 var(--pizza-orange);
         }
 
-        /* Compact mode toggle */
-        .mode-toggle {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 12px;
+        .subtitle {
+            font-size: 0.9rem;
+            color: var(--pizza-brown);
+            margin-top: 2px;
         }
 
-        .mode-btn {
-            padding: 6px 14px;
-            font-size: 0.75rem;
+        /* Controls bar */
+        .controls-bar {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .control-label {
+            font-size: 0.7rem;
+            color: var(--pizza-brown);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .mode-btn, .lang-btn {
+            padding: 5px 12px;
+            font-size: 0.7rem;
             font-family: 'Nunito', sans-serif;
             font-weight: 600;
             border: 2px solid var(--pizza-orange);
-            border-radius: 20px;
+            border-radius: 15px;
             background: white;
             color: var(--pizza-brown);
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
-        .mode-btn.active {
+        .mode-btn.active, .lang-btn.active {
             background: var(--pizza-orange);
             color: white;
         }
@@ -451,31 +471,38 @@
 <body class="compact">
     <div class="container">
         <header>
-            <h1>🍕 Pizza Party!</h1>
+            <h1 data-t="app_title">🍕 Pizza Party!</h1>
+            <p class="subtitle" data-t="app_subtitle">Build your dream pizza</p>
         </header>
 
-        <div class="mode-toggle">
-            <button class="mode-btn" data-mode="normal">Normal</button>
-            <button class="mode-btn active" data-mode="compact">Compact</button>
+        <div class="controls-bar">
+            <div class="control-group">
+                <button class="mode-btn" data-mode="normal" data-t="mode_normal">Normal</button>
+                <button class="mode-btn active" data-mode="compact" data-t="mode_compact">Compact</button>
+            </div>
+            <div class="control-group">
+                <button class="lang-btn active" data-lang="en">EN</button>
+                <button class="lang-btn" data-lang="sk">SK</button>
+            </div>
         </div>
 
         <!-- Name Entry Screen -->
         <div id="name-screen">
             <div class="pizza-icon">🍕</div>
-            <h2>Welcome!</h2>
-            <p>Enter your name to build your pizza</p>
-            <input type="text" id="name-input" class="name-input" placeholder="Your name..." maxlength="30" autocomplete="off">
+            <h2 data-t="welcome_title">Welcome!</h2>
+            <p data-t="welcome_subtitle">Enter your name to build your pizza</p>
+            <input type="text" id="name-input" class="name-input" data-t-placeholder="name_placeholder" placeholder="Your name..." maxlength="30" autocomplete="off">
             <br>
-            <button class="btn btn-primary" onclick="enterParty()">Let's Go! 🚀</button>
+            <button class="btn btn-primary" onclick="enterParty()" data-t="btn_start">Let's Go! 🚀</button>
         </div>
 
         <!-- Order Screen -->
         <div id="order-screen">
             <div class="welcome-bar">
                 <div class="welcome-text">
-                    🍕 <span id="user-name-display">Guest</span>'s Pizza
+                    🍕 <span id="user-name-display">Guest</span><span data-t="possessive_pizza">'s Pizza</span>
                 </div>
-                <button class="btn btn-logout" onclick="logout()">Change</button>
+                <button class="btn btn-logout" onclick="logout()" data-t="btn_change">Change</button>
             </div>
 
             <div id="categories">
@@ -484,12 +511,12 @@
 
             <div class="save-section">
                 <div class="pizza-preview">
-                    <h4>🍕 Your Pizza:</h4>
+                    <h4 data-t="your_pizza">🍕 Your Pizza:</h4>
                     <div id="selected-preview" class="selected-items">
-                        <span class="empty-message">Select some ingredients!</span>
+                        <span class="empty-message" data-t="select_ingredients">Select some ingredients!</span>
                     </div>
                 </div>
-                <button class="btn btn-save" onclick="saveOrder()">Save My Pizza! 💾</button>
+                <button class="btn btn-save" onclick="saveOrder()" data-t="btn_save">Save My Pizza! 💾</button>
                 <div id="save-message" class="save-message"></div>
             </div>
         </div>
@@ -498,27 +525,29 @@
     <script>
         const TOKEN = "{{ token }}";
         const INGREDIENTS = {{ ingredients | tojson }};
+        const CATEGORIES = {{ categories | tojson }};
+        const TRANSLATIONS = {{ translations | tojson }};
+        
         let currentUser = null;
         let selectedIngredients = {};
+        let currentLang = 'en';
 
-        // Category display names
-        const CATEGORY_NAMES = {
-            bases: "🍅 Base",
-            cheeses: "🧀 Cheese",
-            meats: "🥓 Meats",
-            veggies: "🥬 Veggies",
-            extras: "✨ Extras"
-        };
+        function t(key) {
+            return TRANSLATIONS[currentLang]?.[key] || TRANSLATIONS['en']?.[key] || key;
+        }
 
         function init() {
+            // Load saved preferences
+            const savedMode = localStorage.getItem('pizzaMode') || 'compact';
+            const savedLang = localStorage.getItem('pizzaLang') || 'en';
+            
+            setMode(savedMode);
+            setLang(savedLang);
+            
             renderCategories();
             setupModeToggle();
+            setupLangToggle();
             
-            // Load saved mode preference
-            const savedMode = localStorage.getItem('pizzaMode') || 'compact';
-            setMode(savedMode);
-            
-            // Enter key to submit name
             document.getElementById('name-input').addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') enterParty();
             });
@@ -526,9 +555,13 @@
 
         function setupModeToggle() {
             document.querySelectorAll('.mode-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    setMode(btn.dataset.mode);
-                });
+                btn.addEventListener('click', () => setMode(btn.dataset.mode));
+            });
+        }
+
+        function setupLangToggle() {
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.addEventListener('click', () => setLang(btn.dataset.lang));
             });
         }
 
@@ -545,21 +578,46 @@
             localStorage.setItem('pizzaMode', mode);
         }
 
+        function setLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('pizzaLang', lang);
+            
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+            
+            // Update all translatable elements
+            document.querySelectorAll('[data-t]').forEach(el => {
+                el.textContent = t(el.dataset.t);
+            });
+            
+            document.querySelectorAll('[data-t-placeholder]').forEach(el => {
+                el.placeholder = t(el.dataset.tPlaceholder);
+            });
+            
+            // Re-render categories with new language
+            renderCategories();
+            updatePreview();
+        }
+
         function renderCategories() {
             const container = document.getElementById('categories');
             container.innerHTML = '';
 
-            for (const [category, items] of Object.entries(INGREDIENTS)) {
+            for (const category of CATEGORIES) {
+                const items = INGREDIENTS[category] || [];
                 if (items.length === 0) continue;
                 
                 const div = document.createElement('div');
                 div.className = 'category';
                 div.innerHTML = `
-                    <h3>${CATEGORY_NAMES[category] || category}</h3>
+                    <h3>${t('cat_' + category)}</h3>
                     <div class="ingredients-grid">
                         ${items.map(item => `
-                            <label class="ingredient" data-category="${category}" data-id="${item.id}">
-                                <input type="checkbox" name="${category}" value="${item.id}">
+                            <label class="ingredient ${selectedIngredients[category]?.includes(item.id) ? 'selected' : ''}" 
+                                   data-category="${category}" data-id="${item.id}">
+                                <input type="checkbox" name="${category}" value="${item.id}" 
+                                       ${selectedIngredients[category]?.includes(item.id) ? 'checked' : ''}>
                                 <span class="emoji">${item.emoji}</span>
                                 <span class="name">${item.name}</span>
                                 <span class="checkmark">✓</span>
@@ -603,7 +661,8 @@
             const preview = document.getElementById('selected-preview');
             const allSelected = [];
 
-            for (const [category, ids] of Object.entries(selectedIngredients)) {
+            for (const category of CATEGORIES) {
+                const ids = selectedIngredients[category] || [];
                 for (const id of ids) {
                     const item = INGREDIENTS[category]?.find(i => i.id === id);
                     if (item) {
@@ -613,7 +672,7 @@
             }
 
             if (allSelected.length === 0) {
-                preview.innerHTML = '<span class="empty-message">Select some ingredients!</span>';
+                preview.innerHTML = `<span class="empty-message">${t('select_ingredients')}</span>`;
             } else {
                 preview.innerHTML = allSelected.map(item => 
                     `<span class="item-tag">${item}</span>`
@@ -642,16 +701,7 @@
 
                 if (data.order && data.order.ingredients) {
                     selectedIngredients = data.order.ingredients;
-                    
-                    for (const [category, ids] of Object.entries(selectedIngredients)) {
-                        for (const id of ids) {
-                            const el = document.querySelector(`.ingredient[data-category="${category}"][data-id="${id}"]`);
-                            if (el) {
-                                el.classList.add('selected');
-                                el.querySelector('input').checked = true;
-                            }
-                        }
-                    }
+                    renderCategories();
                     updatePreview();
                 }
             } catch (err) {
@@ -666,10 +716,7 @@
             currentUser = null;
             selectedIngredients = {};
             
-            document.querySelectorAll('.ingredient').forEach(el => {
-                el.classList.remove('selected');
-                el.querySelector('input').checked = false;
-            });
+            renderCategories();
             updatePreview();
 
             document.getElementById('name-screen').style.display = 'block';
@@ -695,13 +742,13 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    messageEl.textContent = '✅ Saved! 👨‍🍳';
+                    messageEl.textContent = t('save_success');
                     messageEl.className = 'save-message show success';
                 } else {
                     throw new Error(data.error || 'Failed to save');
                 }
             } catch (err) {
-                messageEl.textContent = '❌ Error. Try again.';
+                messageEl.textContent = t('save_error');
                 messageEl.className = 'save-message show error';
             }
 
