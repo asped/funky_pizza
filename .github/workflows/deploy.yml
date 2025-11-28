@@ -1,0 +1,48 @@
+name: Deploy to PythonAnywhere
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Deploy to PythonAnywhere
+        env:
+          PA_API_TOKEN: ${{ secrets.PYTHONANYWHERE_API_TOKEN }}
+          PA_USERNAME: ${{ secrets.PYTHONANYWHERE_API_USER }}
+        run: |
+          # Pull latest code on PythonAnywhere via console API
+          echo "Pulling latest code..."
+          curl -s -X POST \
+            -H "Authorization: Token $PA_API_TOKEN" \
+            "https://www.pythonanywhere.com/api/v0/user/$PA_USERNAME/consoles/" \
+            -d "executable=bash&arguments=&working_directory=/home/$PA_USERNAME/funky_pizza" \
+            > /tmp/console.json
+          
+          CONSOLE_ID=$(cat /tmp/console.json | python3 -c "import sys, json; print(json.load(sys.stdin)['id'])")
+          
+          # Send git pull command
+          curl -s -X POST \
+            -H "Authorization: Token $PA_API_TOKEN" \
+            "https://www.pythonanywhere.com/api/v0/user/$PA_USERNAME/consoles/$CONSOLE_ID/send_input/" \
+            -d "input=cd /home/$PA_USERNAME/funky_pizza && git pull origin master && exit\n"
+          
+          # Wait for command to complete
+          sleep 10
+          
+          # Kill the console
+          curl -s -X DELETE \
+            -H "Authorization: Token $PA_API_TOKEN" \
+            "https://www.pythonanywhere.com/api/v0/user/$PA_USERNAME/consoles/$CONSOLE_ID/"
+          
+          # Reload the web app
+          echo "Reloading web app..."
+          curl -s -X POST \
+            -H "Authorization: Token $PA_API_TOKEN" \
+            "https://www.pythonanywhere.com/api/v0/user/$PA_USERNAME/webapps/$PA_USERNAME.pythonanywhere.com/reload/"
+          
+          echo "Deployment complete!"
