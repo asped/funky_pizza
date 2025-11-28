@@ -13,7 +13,7 @@ jobs:
       - name: Deploy to PythonAnywhere
         env:
           PA_API_TOKEN: ${{ secrets.PYTHONANYWHERE_API_TOKEN }}
-          PA_USERNAME: aasped1
+          PA_USERNAME: ${{ secrets.PYTHONANYWHERE_API_USER }}
         run: |
           # Pull latest code on PythonAnywhere via console API
           echo "Pulling latest code..."
