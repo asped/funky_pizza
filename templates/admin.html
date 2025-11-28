@@ -203,10 +203,10 @@
         }
 
         .done-badge {
-            font-size: 0.7rem;
+            font-size: 0.8rem;
             background: var(--pizza-green);
             color: white;
-            padding: 2px 8px;
+            padding: 4px 10px;
             border-radius: 10px;
             font-family: 'Poppins', sans-serif;
             font-weight: 600;
@@ -233,7 +233,7 @@
         }
 
         .order-content {
-            padding: 15px;
+            padding: 16px;
         }
 
         .order-actions {
@@ -285,36 +285,36 @@
         }
 
         .order-section {
-            margin-bottom: 10px;
+            margin-bottom: 14px;
         }
 
         .section-title {
-            font-size: 0.7rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: rgba(255, 255, 255, 0.5);
-            margin-bottom: 5px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 8px;
         }
 
         .ingredients-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 5px;
+            gap: 8px;
         }
 
         .ingredient-tag {
             background: rgba(244, 162, 97, 0.2);
             color: var(--pizza-orange);
-            padding: 3px 8px;
+            padding: 6px 12px;
             border-radius: 12px;
-            font-size: 0.75rem;
+            font-size: 0.9rem;
             font-weight: 600;
         }
 
         .no-ingredients {
             color: rgba(255, 255, 255, 0.4);
             font-style: italic;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
         }
 
         .empty-state {
@@ -675,6 +675,11 @@
             .ingredient-row { flex-wrap: wrap; }
             .ingredient-actions { width: 100%; justify-content: flex-end; margin-top: 6px; }
             .emoji-picker { grid-template-columns: repeat(6, 1fr); }
+            
+            /* Orders readability on mobile */
+            .section-title { font-size: 0.8rem; }
+            .ingredient-tag { font-size: 0.85rem; padding: 5px 10px; }
+            .order-section { margin-bottom: 12px; }
         }
     </style>
 </head>
