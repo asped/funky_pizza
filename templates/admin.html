@@ -350,6 +350,7 @@
         .cat-meats { background: rgba(111, 78, 55, 0.3); color: #d4a373; }
         .cat-veggies { background: rgba(76, 175, 80, 0.2); color: #6BCB77; }
         .cat-extras { background: rgba(124, 58, 237, 0.2); color: #a78bfa; }
+        .cat-cutting { background: rgba(255, 255, 255, 0.15); color: #fff; }
 
         /* ============ INGREDIENTS MANAGEMENT ============ */
         .ingredients-manager {
@@ -766,6 +767,14 @@
         let ORDERS = {{ orders | tojson }};
         let currentLang = 'en';
 
+        const CUTTING_LABELS = {
+            1: '⭕ Whole',
+            2: '➗ 2 pcs',
+            4: '✚ 4 pcs',
+            6: '✱ 6 pcs',
+            8: '✳️ 8 pcs'
+        };
+
         function t(key) {
             return TRANSLATIONS[currentLang]?.[key] || TRANSLATIONS['en']?.[key] || key;
         }
@@ -876,6 +885,7 @@
                 const ingredients = order.ingredients || {};
                 const hasIngredients = Object.values(ingredients).some(arr => arr.length > 0);
                 const isDone = order.done || false;
+                const cutting = order.cutting || 8;
 
                 let sectionsHTML = '';
                 for (const category of CATEGORIES) {
@@ -895,8 +905,18 @@
                     `;
                 }
 
+                // Add cutting info
+                sectionsHTML += `
+                    <div class="order-section">
+                        <div class="section-title">${t('cat_cutting')}</div>
+                        <div class="ingredients-list">
+                            <span class="ingredient-tag cat-cutting">${CUTTING_LABELS[cutting] || CUTTING_LABELS[8]}</span>
+                        </div>
+                    </div>
+                `;
+
                 if (!hasIngredients) {
-                    sectionsHTML = `<p class="no-ingredients">${t('no_ingredients_selected')}</p>`;
+                    sectionsHTML = `<p class="no-ingredients">${t('no_ingredients_selected')}</p>` + sectionsHTML;
                 }
 
                 return `

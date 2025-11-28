@@ -1,6 +1,12 @@
 {
   "en": {
     "app_title": "🍕 Pizza Party!",
+    "cat_cutting": "🔪 Cutting Style",
+    "cut_1": "Whole (no cuts!)",
+    "cut_2": "2 Halves",
+    "cut_4": "4 Slices",
+    "cut_6": "6 Slices",
+    "cut_8": "8 Slices",
     "app_subtitle": "Build your dream pizza",
     "welcome_title": "Welcome!",
     "welcome_subtitle": "Enter your name to build your pizza",
@@ -56,6 +62,12 @@
   
   "sk": {
     "app_title": "🍕 Pizza Párty!",
+    "cat_cutting": "🔪 Ako krájať?",
+    "cut_1": "Celá (len pre mňa!)",
+    "cut_2": "Na polovice",
+    "cut_4": "4 kúsky",
+    "cut_6": "6 kúskov",
+    "cut_8": "8 kúskov (pre hladošov)",
     "app_subtitle": "Vytvor si svoju vysnívanú pizzu",
     "welcome_title": "Čau!",
     "welcome_subtitle": "Zadaj meno a začni stavať pizzu",

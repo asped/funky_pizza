@@ -207,6 +207,7 @@ def save_order(token):
     data = request.json
     name = data.get("name", "").strip().lower()
     ingredients = data.get("ingredients", {})
+    cutting = data.get("cutting", 8)  # Default to 8 slices
     
     if not name:
         return jsonify({"error": "Name required"}), 400
@@ -219,6 +220,7 @@ def save_order(token):
     orders[name] = {
         "display_name": data.get("name", "").strip(),
         "ingredients": ingredients,
+        "cutting": cutting,
         "done": existing_done
     }
     save_orders(orders)
